@@ -16,7 +16,7 @@ body:
     id: area
     attributes:
       label: Area
-      options: [Overview, App Caches, Large Files & Duplicates, Xcode, Simulators, IDEs, Packages & Toolchains, Docker, Other]
+      options: [Overview, App Caches, Large Files, Duplicates, Xcode, Simulators, IDEs, Packages & Toolchains, Docker, Other]
     validations:
       required: true
   - type: input

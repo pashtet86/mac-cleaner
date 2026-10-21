@@ -1,6 +1,6 @@
 # Security
 
-Mac Optimizer deletes files and runs developer tools, so a bug can cost someone their data. We treat the following
+DevSpace deletes files and runs developer tools, so a bug can cost someone their data. We treat the following
 as security issues:
 
 - anything that removes, moves or modifies files outside what the preview showed;

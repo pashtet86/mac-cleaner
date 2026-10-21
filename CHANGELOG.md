@@ -8,9 +8,14 @@ and the project uses [Semantic Versioning](https://semver.org/). Entries are der
 ### Added
 
 - Overview with disk usage by category.
+- Files Inspector: drill-down treemap colored by deletion safety, with reasons; standard home folders can never be trashed.
+- Sections and rules appear only when something was found on this Mac.
 - App Caches, Xcode, IDEs and Packages & Toolchains pages driven by `cleanup_rules.json`.
 - Simulators: runtimes, devices and orphaned devices via `simctl`.
 - Docker: usage and an allowlist of prune actions; volumes are never removed.
-- Large Files & Duplicates: size thresholds, sampled + SHA-256 duplicate detection, hard links counted once.
+- Large Files: size thresholds and file-kind breakdown.
+- Duplicates: sampled + SHA-256 detection, hard links counted once, at least one copy always kept.
 - Trash-only deletion with mandatory preview; scoped path policies.
+- App icon; renamed to DevSpace.
+- `make dmg`: universal DMG, ad-hoc or Developer ID signed and notarized.
 - Unit tests, git hooks, CI.

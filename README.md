@@ -1,4 +1,4 @@
-# Mac Optimizer
+# DevSpace
 
 A native macOS app that frees disk space safely — built for developers whose Macs fill up with Xcode
 build products, simulators, SDKs, package caches and Docker images.
@@ -11,8 +11,10 @@ how risky that is and what happens next.
 | Module | What it does |
 |---|---|
 | **Overview** | Disk usage split by category, with what is safe to clean right now |
+| **Files Inspector** | A treemap of any folder in your home: open folders to go deeper, see sizes, select files and folders to remove. Every tile is colored by how safe it is to delete — rebuildable, likely safe, review, your files, protected — with the reason |
 | **App Caches** | `~/Library/Caches`, logs, Slack and updater downloads |
-| **Large Files & Duplicates** | Files over 100 MB / 500 MB / 1 GB and byte-identical copies (size → sampled hash → SHA-256) |
+| **Large Files** | Files over 100 MB / 500 MB / 1 GB, grouped into videos, installers & disk images, archives |
+| **Duplicates** | Byte-identical copies over 1 / 10 / 100 MB (size → sampled hash → SHA-256); hard links count once |
 | **Xcode** | DerivedData, previews, device support symbols, archives |
 | **Simulators** | Runtimes and devices from `simctl`, including orphaned devices of removed runtimes |
 | **IDEs** | Android Studio and the Android SDK (NDK, system images, build tools), JetBrains IDEs, VS Code / Cursor / Windsurf, Zed |
@@ -29,8 +31,9 @@ Coming next: security audit (launch agents, login items, code signatures) and ne
 - **Scoped paths.** Cache rules can only touch `~` and `$TMPDIR`, and never Documents, Desktop, Pictures,
   Movies, Music, Keychains, Mail, Messages or cloud folders. Files you pick by hand may live in personal folders
   but never in `~/Library`.
-- **No cloud traversal.** `~/Library/CloudStorage` and `~/Library/Mobile Documents` are never read, so
-  online-only files are not downloaded.
+- **No cloud or media-library traversal.** `~/Library/CloudStorage` and `~/Library/Mobile Documents` are never
+  read, so online-only files are not downloaded. File scans also skip `~/Music` and `~/Movies/TV` — the Music and
+  TV libraries are behind the "Media & Apple Music" privacy prompt and hold no developer data.
 - **No shell.** External tools (`xcrun simctl`, `docker`) run through `ProcessRunner` with argument arrays, from a
   fixed allowlist of operations; identifiers are validated first.
 - **Risk levels.** Every rule is `safe`, `probablySafe` or `review`. Only `safe` items are preselected.
@@ -47,13 +50,13 @@ macOS asks for Desktop, Documents and Downloads access the first time a scan rea
 ## Getting started
 
 ```sh
-git clone <repo-url> mac-optimizer
-cd mac-optimizer
+git clone <repo-url> devspace
+cd devspace
 make setup   # installs git hooks
 make run     # builds and launches the Debug app
 ```
 
-Or open `MacOptimizer.xcodeproj` in Xcode and press ⌘R.
+Or open `DevSpace.xcodeproj` in Xcode and press ⌘R.
 
 | Command | |
 |---|---|
@@ -63,22 +66,49 @@ Or open `MacOptimizer.xcodeproj` in Xcode and press ⌘R.
 | `make check` | Everything CI runs |
 | `make snapshots` | Renders every screen in light and dark mode to `build/snapshots` |
 
+## Sharing a test build
+
+```sh
+make dmg   # → build/dist/DevSpace-<version>.dmg, universal (Apple Silicon + Intel)
+```
+
+Testers need macOS 26 or later. They open the DMG and drag **DevSpace** onto **Applications**.
+
+**Ad-hoc build (default).** It is not signed with a Developer ID, so Gatekeeper blocks the first launch. The tester
+allows it once:
+
+1. Open DevSpace from Applications. macOS says it cannot verify the developer — click **Done**.
+2. Open System Settings → Privacy & Security, scroll to *Security*, click **Open Anyway** next to DevSpace, and
+   confirm with your password.
+
+Share the SHA-256 printed by `make dmg` so the tester can check the download with `shasum -a 256 <file>`.
+
+**Signed and notarized build.** With a *Developer ID Application* certificate (paid Apple Developer Program), the app
+opens without warnings:
+
+```sh
+xcrun notarytool store-credentials devspace-notary --apple-id <apple-id> --team-id <TEAMID>   # once
+SIGN_IDENTITY="Developer ID Application: <Name> (<TEAMID>)" NOTARY_PROFILE=devspace-notary make dmg
+```
+
+`store-credentials` asks for an app-specific password and keeps it in your keychain; never put it in the repository.
+
 ## Project structure
 
 ```
-MacOptimizer/
+DevSpace/
   App/            Entry point, navigation (AppSection), debug snapshots
   Design/         Theme tokens (colors, type), shared components
   Core/           ProcessRunner, DiskUsage, SafeTrash — UI-free, nonisolated
   Features/
     Cleanup/      Rule model, scanner, store and pages for every rule-based section
-    Files/        Large files and duplicates
+    Files/        Large Files and Duplicates pages, shared scanner
     Simulators/   simctl integration
     Docker/       Docker CLI integration
     Overview/
   Resources/
     cleanup_rules.json   Every cache rule: paths, risk, description, apps to quit
-MacOptimizerTests/       Unit tests
+DevSpaceTests/       Unit tests
 scripts/                 Read-only shell audits the app grew out of
 ```
 
@@ -86,7 +116,7 @@ Folders are synchronized with the Xcode project: add a file on disk and it is pa
 
 ## Adding a cleanup rule
 
-Most contributions are a new entry in `MacOptimizer/Resources/cleanup_rules.json`. See
+Most contributions are a new entry in `DevSpace/Resources/cleanup_rules.json`. See
 [CONTRIBUTING.md](CONTRIBUTING.md#adding-a-cleanup-rule) for the fields and the safety checklist.
 
 ## Contributing
