@@ -8,6 +8,7 @@ struct DevSpaceApp: App {
     @State private var files = FileScans()
     @State private var inspector = InspectorStore()
     @State private var thermals = ThermalStore()
+    @State private var apps = AppsStore()
 
     var body: some Scene {
         WindowGroup {
@@ -18,6 +19,7 @@ struct DevSpaceApp: App {
                 .environment(files)
                 .environment(inspector)
                 .environment(thermals)
+                .environment(apps)
                 .frame(minWidth: 860, minHeight: 600)
         }
         .defaultSize(width: 1120, height: 780)

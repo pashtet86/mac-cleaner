@@ -4,11 +4,12 @@ struct OverviewView: View {
     @Environment(CleanupStore.self) private var cleanup
     @Environment(SimulatorsStore.self) private var simulators
     @Environment(DockerStore.self) private var docker
+    @Environment(AppsStore.self) private var apps
     @Binding var selection: AppSection?
     @State private var volume = DiskUsage.bootVolume()
 
     private var availability: SectionAvailability {
-        SectionAvailability(cleanup: cleanup, simulators: simulators, docker: docker)
+        SectionAvailability(cleanup: cleanup, simulators: simulators, docker: docker, apps: apps)
     }
 
     var body: some View {

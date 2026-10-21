@@ -1,9 +1,10 @@
 import SwiftUI
 
 enum AppSection: String, Hashable, CaseIterable {
-    case overview, inspector, apps, xcode, simulators, ides, docker, packages, largeFiles, duplicates, security, network
+    case overview, inspector, apps, applications, xcode, simulators, ides, docker, packages, largeFiles, duplicates,
+        security, network
 
-    static let mac: [AppSection] = [.apps, .largeFiles, .duplicates, .inspector]
+    static let mac: [AppSection] = [.apps, .applications, .largeFiles, .duplicates, .inspector]
     static let developer: [AppSection] = [.xcode, .simulators, .ides, .packages, .docker]
     static let upcoming: [AppSection] = [.security, .network]
     static let available: [AppSection] = [.overview] + mac + developer
@@ -13,6 +14,7 @@ enum AppSection: String, Hashable, CaseIterable {
         case .overview: "Overview"
         case .inspector: "Files Inspector"
         case .apps: "App Caches"
+        case .applications: "Applications"
         case .xcode: "Xcode"
         case .simulators: "Simulators"
         case .ides: "IDEs"
@@ -29,6 +31,7 @@ enum AppSection: String, Hashable, CaseIterable {
     var pageTitle: String {
         switch self {
         case .apps: "App Cache Cleanup"
+        case .applications: "Application Cleanup"
         case .xcode: "Xcode Cleanup"
         case .simulators: "Simulator Cleanup"
         case .ides: "IDE Cleanup"
@@ -45,6 +48,7 @@ enum AppSection: String, Hashable, CaseIterable {
         case .overview: "gauge.with.dots.needle.50percent"
         case .inspector: "square.split.bottomrightquarter"
         case .apps: "tray.full"
+        case .applications: "app.dashed"
         case .xcode: "hammer"
         case .simulators: "ipad.and.iphone"
         case .ides: "curlybraces.square"
@@ -60,6 +64,7 @@ enum AppSection: String, Hashable, CaseIterable {
     var summary: String {
         switch self {
         case .apps: "Caches and logs that apps rebuild themselves."
+        case .applications: "Installed apps with their size and when you last opened them."
         case .xcode: "Build products, previews, device symbols and archives."
         case .simulators: "Runtimes and devices managed by Xcode."
         case .docker: "Images, containers and build cache."
@@ -82,7 +87,7 @@ enum AppSection: String, Hashable, CaseIterable {
         case .apps: Theme.ochre
         case .simulators: Theme.rose
         case .ides: Theme.lavender
-        case .docker, .overview, .inspector, .largeFiles, .duplicates: Theme.accent
+        case .docker, .overview, .inspector, .applications, .largeFiles, .duplicates: Theme.accent
         default: .secondary
         }
     }
@@ -104,10 +109,11 @@ struct RootView: View {
     @Environment(CleanupStore.self) private var cleanup
     @Environment(SimulatorsStore.self) private var simulators
     @Environment(DockerStore.self) private var docker
+    @Environment(AppsStore.self) private var apps
     @Environment(InspectorStore.self) private var inspector
 
     private var availability: SectionAvailability {
-        SectionAvailability(cleanup: cleanup, simulators: simulators, docker: docker)
+        SectionAvailability(cleanup: cleanup, simulators: simulators, docker: docker, apps: apps)
     }
 
     var body: some View {
@@ -153,6 +159,7 @@ struct RootView: View {
             switch section {
             case .overview: OverviewView(selection: $selection)
             case .inspector: InspectorView()
+            case .applications: AppsView()
             case .apps, .xcode, .ides, .packages: RulesPage(section: section).id(section)
             case .simulators: SimulatorsView()
             case .largeFiles: LargeFilesView(store: files.large)

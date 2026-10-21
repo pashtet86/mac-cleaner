@@ -143,3 +143,42 @@ struct CapacityBarTests {
         #expect(widths == [198, 98])
     }
 }
+
+@Suite("Application removal")
+struct ApplicationRemovalTests {
+    private let home = FileManager.default.homeDirectoryForCurrentUser
+
+    @Test(
+        "Only whole app bundles inside the Applications folders can be removed",
+        arguments: [
+            ("/Applications/Figma.app", true),
+            ("/Applications/Adobe Photoshop 2026/Adobe Photoshop 2026.app", true),
+            ("/Applications", false),
+            ("/Applications/Figma.app/Contents", false),
+            ("/Applications/Figma.app/Contents/Frameworks/Helper.app", false),
+            ("/Applications/a/b/Deep.app", false),
+            ("/System/Applications/Safari.app", false),
+            ("/Users/Shared/Tool.app", false),
+        ])
+    func bundles(path: String, removable: Bool) {
+        #expect(SafeTrash.isRemovableApplication(URL(fileURLWithPath: path)) == removable)
+    }
+
+    @Test("~/Applications counts too")
+    func userApplications() {
+        #expect(SafeTrash.isRemovableApplication(home.appending(path: "Applications/Tool.app")))
+    }
+
+    @Test("Apple apps without an App Store receipt are system apps; Xcode is not")
+    func systemApps() {
+        func app(_ id: String, store: Bool = false) -> AppEntry {
+            AppEntry(
+                url: URL(fileURLWithPath: "/Applications/X.app"), name: "X", bundleID: id, version: nil,
+                lastUsed: nil, isFromAppStore: store)
+        }
+        #expect(app("com.apple.Safari").isSystem)
+        #expect(!app("com.apple.iMovieApp", store: true).isSystem)
+        #expect(!app("com.apple.dt.Xcode").isSystem)
+        #expect(!app("com.figma.Desktop").isSystem)
+    }
+}

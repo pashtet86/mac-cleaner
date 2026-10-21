@@ -32,6 +32,24 @@ nonisolated enum SafeTrash {
         "Library/CloudStorage", "Library/Mobile Documents",
     ]
 
+    /// Applications may be removed only as whole `.app` bundles inside /Applications or
+    /// ~/Applications (one subfolder deep, e.g. "/Applications/Adobe Photoshop/Photoshop.app").
+    static func isRemovableApplication(_ url: URL) -> Bool {
+        let path = url.resolvingSymlinksInPath().standardizedFileURL.path
+        guard path.hasSuffix(".app") else { return false }
+        for root in ["/Applications", home + "/Applications"] where path.hasPrefix(root + "/") {
+            let relative = path.dropFirst(root.count + 1).split(separator: "/")
+            // The bundle itself, never something inside it.
+            return (1...2).contains(relative.count) && relative.dropLast().allSatisfy { !$0.hasSuffix(".app") }
+        }
+        return false
+    }
+
+    static func trashApplication(_ url: URL) throws {
+        guard isRemovableApplication(url) else { throw CocoaError(.fileWriteNoPermission) }
+        try FileManager.default.trashItem(at: url, resultingItemURL: nil)
+    }
+
     /// Standard home folders. They may hold removable items, but are never removed themselves.
     static let standardHomeFolders = [
         "Applications", "Desktop", "Documents", "Downloads", "Library", "Movies", "Music", "Pictures", "Public",

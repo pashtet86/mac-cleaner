@@ -7,12 +7,17 @@ final class ThermalStore {
     private(set) var cpu: Double?
     private(set) var ssd: Double?
     private(set) var state: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState
+    /// RPM per fan; empty until the first reading.
+    private(set) var fans: [Double] = []
 
     /// Nil when the private sensor API is unavailable; the thermal state still works.
     private let sensors = ThermalSensors()
+    /// Nil on Macs without fans — the fan line is hidden then.
+    private let fanReader = FanReader()
     private var polling: Task<Void, Never>?
 
     var hasSensors: Bool { sensors != nil }
+    var hasFans: Bool { fanReader != nil }
 
     func start(every interval: Duration = .seconds(3)) {
         guard polling == nil else { return }
@@ -31,10 +36,14 @@ final class ThermalStore {
 
     private func refresh() async {
         state = ProcessInfo.processInfo.thermalState
-        guard let sensors else { return }
-        let reading = await Task.detached(priority: .utility) { sensors.reading() }.value
+        let sensors = sensors
+        let fanReader = fanReader
+        let (reading, speeds) = await Task.detached(priority: .utility) {
+            (sensors?.reading(), fanReader?.speeds() ?? [])
+        }.value
         cpu = reading?.cpu
         ssd = reading?.ssd
+        fans = speeds
     }
 }
 
