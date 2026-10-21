@@ -138,7 +138,7 @@ struct TreemapView: View {
         let hasMosaic = (tile.node?.children.isEmpty == false) && rect.width > 40 && rect.height > 40
         // Leaves carry the full tone; folders a light wash under their own mosaic.
         let wash = isRest ? 0.12 : (hasMosaic ? 0.18 : 0.5)
-        context.fill(shape, with: .color(tile.safety.tone.opacity(wash)))
+        context.fill(shape, with: .color(tile.safety.tone.opacity(tile.id == hovered ? wash + 0.1 : wash)))
 
         // Inner mosaic: the folder's own children, tinted by their safety.
         if let node = tile.node, !node.children.isEmpty, rect.width > 40, rect.height > 40 {

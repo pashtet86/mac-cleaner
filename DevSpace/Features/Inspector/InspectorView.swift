@@ -12,7 +12,7 @@ struct InspectorView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 PageHeader(
-                    title: section.title, subtitle: section.summary, symbol: section.symbol, tint: section.tint
+                    title: section.pageTitle, subtitle: section.summary, symbol: section.symbol, tint: section.tint
                 ) {
                     HStack(spacing: 10) {
                         Button {
@@ -108,13 +108,13 @@ struct InspectorView: View {
             VStack(alignment: .leading, spacing: 20) {
                 HStack(alignment: .top, spacing: 48) {
                     Stat(
-                        label: "Selected", value: store.selectedBytes.formattedBytes,
+                        label: "To clean", value: store.selectedBytes.formattedBytes,
                         caption: "\(store.selected.count) items", large: true)
                     Stat(
                         label: current.name, value: current.size.formattedBytes,
                         caption: "\(current.children.count + current.smallCount) items inside")
                     Spacer()
-                    Button("Review & Move to Trash…") { isReviewing = true }
+                    Button("Clean Selected…") { isReviewing = true }
                         .buttonStyle(.primary)
                         .disabled(store.selected.isEmpty || store.phase != .ready)
                 }
@@ -161,9 +161,9 @@ struct InspectorView: View {
                 store.goUp()
             } label: {
                 Image(systemName: "chevron.left").font(.system(size: 11, weight: .semibold))
-                    .frame(width: 22, height: 22)
+                    .frame(width: 18, height: 18)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.icon)
             .disabled(store.path.count < 2)
             .keyboardShortcut("[", modifiers: .command)
             .help("Back (⌘[)")
@@ -327,18 +327,16 @@ private struct InspectorRow: View {
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(.tertiary)
-                    .frame(width: 20, height: 20)
-                    .contentShape(Rectangle())
+                    .frame(width: 16, height: 16)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.icon)
             .opacity(node.canOpen ? 1 : 0)
             .disabled(!node.canOpen)
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 9)
         .contentShape(Rectangle())
-        .background(store.focused === node ? Theme.accent.opacity(0.06) : .clear)
+        .hoverRow(isActive: store.focused === node)
         .onTapGesture(count: 2) { store.open(node) }
         .onTapGesture { store.focused = node }
     }
@@ -394,7 +392,7 @@ private struct InspectorReviewSheet: View {
 
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading, spacing: 18) {
-                Eyebrow("Review")
+                Eyebrow("Ready to clean")
                 VStack(alignment: .leading, spacing: 6) {
                     Text(store.selectedBytes.formattedBytes).font(.figure)
                     Text("\(nodes.count) items will be moved to the Trash. You can put them back from there.")
@@ -445,7 +443,7 @@ private struct InspectorReviewSheet: View {
                 Button("Cancel") { dismiss() }
                     .buttonStyle(.quiet)
                     .keyboardShortcut(.cancelAction)
-                Button("Move to Trash") {
+                Button("Clean") {
                     dismiss()
                     Task { await store.trashSelected() }
                 }

@@ -31,13 +31,13 @@ struct LargeFilesView: View {
             VStack(alignment: .leading, spacing: 22) {
                 HStack(alignment: .top, spacing: 48) {
                     Stat(
-                        label: "Selected", value: store.selectedBytes.formattedBytes,
+                        label: "To clean", value: store.selectedBytes.formattedBytes,
                         caption: "\(store.selection.count) files", large: true)
                     Stat(
                         label: "Large files", value: store.largeBytes.formattedBytes,
                         caption: "\(store.largeFiles.count) over \(store.minimumSize.label)")
                     Spacer()
-                    Button("Review & Move to Trash…") { isReviewing = true }
+                    Button("Clean Selected…") { isReviewing = true }
                         .buttonStyle(.primary)
                         .disabled(store.selection.isEmpty || store.phase != .ready)
                 }

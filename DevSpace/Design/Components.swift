@@ -165,24 +165,40 @@ struct LegendDot: View {
 
 // MARK: - Buttons
 
-struct PrimaryButtonStyle: ButtonStyle {
-    @Environment(\.isEnabled) private var isEnabled
+/// Shared timing for every hover response: quick, never bouncy.
+extension Animation {
+    static let hover = Animation.easeOut(duration: 0.16)
+}
 
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.system(size: 13, weight: .medium))
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .foregroundStyle(Theme.onAccent)
-            .background(Theme.accent, in: Capsule())
-            .opacity(isEnabled ? (configuration.isPressed ? 0.82 : 1) : 0.35)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+struct PrimaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View { StyledButton(configuration: configuration) }
+
+    private struct StyledButton: View {
+        let configuration: Configuration
+        @Environment(\.isEnabled) private var isEnabled
+        @State private var isHovered = false
+
+        var body: some View {
+            configuration.label
+                .font(.system(size: 13, weight: .medium))
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .foregroundStyle(Theme.onAccent)
+                .background(Theme.accent, in: Capsule())
+                // A soft sheen on hover instead of a color change.
+                .overlay { Capsule().fill(Theme.onAccent.opacity(isHovered && isEnabled ? 0.1 : 0)) }
+                .shadow(color: Theme.accent.opacity(isHovered && isEnabled ? 0.25 : 0), radius: 8, y: 2)
+                .opacity(isEnabled ? (configuration.isPressed ? 0.82 : 1) : 0.35)
+                .onHover { hovering in withAnimation(.hover) { isHovered = hovering } }
+                .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+        }
     }
 }
 
 /// The shared pill shape for quiet buttons and chips, so they line up side by side.
 struct PillModifier: ViewModifier {
     var isPressed = false
+    var isHovered = false
 
     func body(content: Content) -> some View {
         content
@@ -190,22 +206,54 @@ struct PillModifier: ViewModifier {
             .padding(.horizontal, 14)
             .padding(.vertical, 7)
             .foregroundStyle(.primary)
-            .background(Color.primary.opacity(isPressed ? 0.08 : 0.04), in: Capsule())
-            .overlay { Capsule().strokeBorder(Theme.hairline) }
+            .background(Color.primary.opacity(isPressed ? 0.1 : (isHovered ? 0.07 : 0.04)), in: Capsule())
+            .overlay { Capsule().strokeBorder(isHovered ? Color.primary.opacity(0.16) : Theme.hairline) }
     }
 }
 
 extension View {
-    func pill(isPressed: Bool = false) -> some View { modifier(PillModifier(isPressed: isPressed)) }
+    func pill(isPressed: Bool = false, isHovered: Bool = false) -> some View {
+        modifier(PillModifier(isPressed: isPressed, isHovered: isHovered))
+    }
 }
 
 struct QuietButtonStyle: ButtonStyle {
-    @Environment(\.isEnabled) private var isEnabled
+    func makeBody(configuration: Configuration) -> some View { StyledButton(configuration: configuration) }
 
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .pill(isPressed: configuration.isPressed)
-            .opacity(isEnabled ? 1 : 0.4)
+    private struct StyledButton: View {
+        let configuration: Configuration
+        @Environment(\.isEnabled) private var isEnabled
+        @State private var isHovered = false
+
+        var body: some View {
+            configuration.label
+                .pill(isPressed: configuration.isPressed, isHovered: isHovered && isEnabled)
+                .opacity(isEnabled ? 1 : 0.4)
+                .onHover { hovering in withAnimation(.hover) { isHovered = hovering } }
+        }
+    }
+}
+
+/// Small icon-only buttons (chevrons, Finder, remove): muted until hovered.
+struct IconButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View { StyledButton(configuration: configuration) }
+
+    private struct StyledButton: View {
+        let configuration: Configuration
+        @Environment(\.isEnabled) private var isEnabled
+        @State private var isHovered = false
+
+        var body: some View {
+            configuration.label
+                .foregroundStyle(isHovered && isEnabled ? AnyShapeStyle(.primary) : AnyShapeStyle(.tertiary))
+                .padding(3)
+                .background(
+                    Circle().fill(Color.primary.opacity(isHovered && isEnabled ? 0.07 : 0))
+                )
+                .opacity(configuration.isPressed ? 0.6 : 1)
+                .contentShape(Circle())
+                .onHover { hovering in withAnimation(.hover) { isHovered = hovering } }
+        }
     }
 }
 
@@ -215,6 +263,48 @@ extension ButtonStyle where Self == PrimaryButtonStyle {
 
 extension ButtonStyle where Self == QuietButtonStyle {
     static var quiet: QuietButtonStyle { QuietButtonStyle() }
+}
+
+extension ButtonStyle where Self == IconButtonStyle {
+    static var icon: IconButtonStyle { IconButtonStyle() }
+}
+
+// MARK: - Hover
+
+/// A faint wash behind list rows on hover.
+struct HoverRow: ViewModifier {
+    var isActive = false
+    @State private var isHovered = false
+
+    func body(content: Content) -> some View {
+        content
+            .background {
+                Rectangle().fill(
+                    isActive ? Theme.accent.opacity(0.07) : Color.primary.opacity(isHovered ? 0.035 : 0))
+            }
+            .onHover { hovering in withAnimation(.hover) { isHovered = hovering } }
+    }
+}
+
+/// Clickable cards rise slightly and pick up an accent edge on hover.
+struct HoverLift: ViewModifier {
+    @State private var isHovered = false
+
+    func body(content: Content) -> some View {
+        content
+            .overlay {
+                RoundedRectangle(cornerRadius: Theme.radius, style: .continuous)
+                    .strokeBorder(Theme.accent.opacity(isHovered ? 0.28 : 0), lineWidth: 1)
+            }
+            .shadow(color: .black.opacity(isHovered ? 0.08 : 0), radius: 14, y: 6)
+            .offset(y: isHovered ? -2 : 0)
+            .onHover { hovering in withAnimation(.hover) { isHovered = hovering } }
+    }
+}
+
+extension View {
+    func hoverRow(isActive: Bool = false) -> some View { modifier(HoverRow(isActive: isActive)) }
+    func hoverLift() -> some View { modifier(HoverLift()) }
 }
 
 /// Selection checkbox that supports a mixed state.

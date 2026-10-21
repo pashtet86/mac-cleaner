@@ -25,6 +25,21 @@ enum AppSection: String, Hashable, CaseIterable {
         }
     }
 
+    /// Page heading: says what the page cleans.
+    var pageTitle: String {
+        switch self {
+        case .apps: "App Cache Cleanup"
+        case .xcode: "Xcode Cleanup"
+        case .simulators: "Simulator Cleanup"
+        case .ides: "IDE Cleanup"
+        case .packages: "Package & Toolchain Cleanup"
+        case .docker: "Docker Cleanup"
+        case .largeFiles: "Large File Cleanup"
+        case .duplicates: "Duplicate Cleanup"
+        default: title
+        }
+    }
+
     var symbol: String {
         switch self {
         case .overview: "square.grid.2x2"
@@ -101,10 +116,10 @@ struct RootView: View {
                 Section {
                     row(.overview)
                 }
-                Section("Mac") {
+                Section("Clean Mac") {
                     ForEach(availability.visible(AppSection.mac, keeping: selection), id: \.self, content: row)
                 }
-                Section("Developer") {
+                Section("Clean Dev Tools") {
                     ForEach(availability.visible(AppSection.developer, keeping: selection), id: \.self, content: row)
                     if availability.isDetecting {
                         Label {

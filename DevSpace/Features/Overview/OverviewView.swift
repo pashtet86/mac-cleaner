@@ -14,7 +14,9 @@ struct OverviewView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
-                PageHeader(title: "Overview", subtitle: Host.current().localizedName ?? "This Mac")
+                PageHeader(
+                    title: "Overview",
+                    subtitle: "Developer disk cleaner · \(Host.current().localizedName ?? "This Mac")")
 
                 if let volume { diskCard(volume) }
 
@@ -129,6 +131,7 @@ struct OverviewView: View {
                     Stat(label: section.title, value: value, caption: caption)
                 }
             }
+            .hoverLift()
             .contentShape(.rect(cornerRadius: Theme.radius))
         }
         .buttonStyle(.plain)

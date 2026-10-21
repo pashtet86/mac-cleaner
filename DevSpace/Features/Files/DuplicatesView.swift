@@ -26,13 +26,13 @@ struct DuplicatesView: View {
             VStack(alignment: .leading, spacing: 22) {
                 HStack(alignment: .top, spacing: 48) {
                     Stat(
-                        label: "Selected", value: store.selectedBytes.formattedBytes,
+                        label: "To clean", value: store.selectedBytes.formattedBytes,
                         caption: "\(store.selection.count) files", large: true)
                     Stat(
                         label: "Wasted", value: store.wastedBytes.formattedBytes,
                         caption: "\(copies) copies in \(store.duplicateGroups.count) groups")
                     Spacer()
-                    Button("Review & Move to Trash…") { isReviewing = true }
+                    Button("Clean Selected…") { isReviewing = true }
                         .buttonStyle(.primary)
                         .disabled(store.selection.isEmpty || store.phase != .ready)
                 }

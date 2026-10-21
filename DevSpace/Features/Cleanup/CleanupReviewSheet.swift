@@ -15,7 +15,7 @@ struct CleanupReviewSheet: View {
 
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading, spacing: 18) {
-                Eyebrow("Review")
+                Eyebrow("Ready to clean")
                 VStack(alignment: .leading, spacing: 6) {
                     Text(store.selectedBytes(in: section).formattedBytes).font(.figure)
                     Text("\(selected.count) items will be moved to the Trash. Nothing is deleted permanently.")
@@ -89,7 +89,7 @@ struct CleanupReviewSheet: View {
                 Button("Cancel") { dismiss() }
                     .buttonStyle(.quiet)
                     .keyboardShortcut(.cancelAction)
-                Button("Move to Trash") {
+                Button("Clean") {
                     dismiss()
                     Task { await store.cleanSelected(in: section) }
                 }

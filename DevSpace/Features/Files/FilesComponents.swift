@@ -15,7 +15,7 @@ struct FileScanPage<Summary: View, Results: View>: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
                 PageHeader(
-                    title: section.title, subtitle: section.summary,
+                    title: section.pageTitle, subtitle: section.summary,
                     symbol: section.symbol, tint: section.tint
                 ) {
                     if store.isScanning {
@@ -95,10 +95,8 @@ struct FileScanScope: View {
                                 } label: {
                                     Image(systemName: "xmark")
                                         .font(.system(size: 9, weight: .bold))
-                                        .foregroundStyle(.tertiary)
-                                        .contentShape(Rectangle())
                                 }
-                                .buttonStyle(.plain)
+                                .buttonStyle(.icon)
                                 .help("Remove from scan")
                             }
                         } icon: {
@@ -214,14 +212,14 @@ struct FileRow: View {
             } label: {
                 Image(systemName: "arrow.up.forward.square")
                     .font(.system(size: 12))
-                    .foregroundStyle(.tertiary)
-                    .frame(width: 20, height: 20)
+                    .frame(width: 16, height: 16)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.icon)
             .help("Show in Finder")
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
+        .hoverRow()
     }
 }
 
@@ -236,7 +234,7 @@ struct FilesReviewSheet: View {
 
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading, spacing: 18) {
-                Eyebrow("Review")
+                Eyebrow("Ready to clean")
                 VStack(alignment: .leading, spacing: 6) {
                     Text(store.selectedBytes.formattedBytes).font(.figure)
                     Text("\(entries.count) files will be moved to the Trash. You can put them back from there.")
@@ -284,7 +282,7 @@ struct FilesReviewSheet: View {
                 Button("Cancel") { dismiss() }
                     .buttonStyle(.quiet)
                     .keyboardShortcut(.cancelAction)
-                Button("Move to Trash") {
+                Button("Clean") {
                     dismiss()
                     Task { await store.trashSelected() }
                 }

@@ -10,7 +10,7 @@ struct DockerView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
                 PageHeader(
-                    title: section.title, subtitle: section.summary,
+                    title: section.pageTitle, subtitle: section.summary,
                     symbol: section.symbol, tint: section.tint
                 ) {
                     HStack(spacing: 10) {
@@ -58,11 +58,11 @@ struct DockerView: View {
         .background(Theme.canvas)
         .task { await store.refreshIfNeeded() }
         .confirmationDialog(
-            pending.map { "Remove \($0.title.lowercased())?" } ?? "",
+            pending.map { "Clean \($0.title.lowercased())?" } ?? "",
             isPresented: Binding(get: { pending != nil }, set: { if !$0 { pending = nil } }),
             presenting: pending
         ) { action in
-            Button("Remove", role: .destructive) { Task { await store.perform(action) } }
+            Button("Clean", role: .destructive) { Task { await store.perform(action) } }
         } message: { action in
             Text(action.detail + (store.reclaimable(for: action).map { " Frees about \($0.formattedBytes)." } ?? ""))
         }
@@ -132,12 +132,13 @@ struct DockerView: View {
                             if store.busy.contains(action) {
                                 ProgressView().controlSize(.small).frame(width: 70)
                             } else {
-                                Button("Remove…") { pending = action }
+                                Button("Clean…") { pending = action }
                                     .buttonStyle(.quiet)
                             }
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
+                        .hoverRow()
                     }
                 }
             }

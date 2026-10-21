@@ -17,12 +17,13 @@ enum Theme {
     static let lavender = Color(light: 0x8A6FCF, dark: 0x8F78D8)
     static let dataOther = Color.primary.opacity(0.16)
 
-    // Risk tones (status — never reused as series colors).
-    static let sage = Color(light: 0x5F7D69, dark: 0x9BB8A3)
-    static let sand = Color(light: 0x94795A, dark: 0xCDB896)
-    static let clay = Color(light: 0x9A5D4F, dark: 0xD7A193)
-    /// Neutral tone for the user's own files in the Files Inspector.
-    static let slate = Color(light: 0x6E778A, dark: 0x8C95A8)
+    // Risk tones (status — never reused as series colors). Validated as a set for
+    // color-vision separation: emerald, amber, raspberry, blue slate.
+    static let sage = Color(light: 0x2A9A5E, dark: 0x34A874)
+    static let sand = Color(light: 0xC29512, dark: 0xBC8A1E)
+    static let clay = Color(light: 0xC8445E, dark: 0xDD5C7C)
+    /// The user's own files in the Files Inspector.
+    static let slate = Color(light: 0x5470B0, dark: 0x6A84C8)
 
     // Surfaces.
     static let canvas = Color(light: 0xF6F5F2, dark: 0x16171A)

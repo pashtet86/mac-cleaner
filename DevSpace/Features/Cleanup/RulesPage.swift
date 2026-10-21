@@ -20,7 +20,7 @@ struct RulesPage: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
                 PageHeader(
-                    title: section.title, subtitle: section.summary,
+                    title: section.pageTitle, subtitle: section.summary,
                     symbol: section.symbol, tint: section.tint
                 ) {
                     Button {
@@ -97,10 +97,10 @@ struct RulesPage: View {
             VStack(alignment: .leading, spacing: 22) {
                 HStack(alignment: .top, spacing: 48) {
                     Stat(
-                        label: "Selected", value: store.selectedBytes(in: ruleSection).formattedBytes,
+                        label: "To clean", value: store.selectedBytes(in: ruleSection).formattedBytes,
                         caption: "\(store.selectedItems(in: ruleSection).count) items", large: true)
                     Stat(
-                        label: "Found", value: found.formattedBytes,
+                        label: "Cleanable", value: found.formattedBytes,
                         caption: store.scannedAt.map { "Scanned \($0.formatted(.relative(presentation: .named)))" })
                     Spacer()
                     VStack(alignment: .trailing, spacing: 10) {
@@ -111,7 +111,7 @@ struct RulesPage: View {
                                     .font(.callout).foregroundStyle(.secondary)
                             }
                         }
-                        Button("Review & Move to Trash…") { isReviewing = true }
+                        Button("Clean Selected…") { isReviewing = true }
                             .buttonStyle(.primary)
                             .disabled(store.selectedItems(in: ruleSection).isEmpty || store.phase != .ready)
                     }
@@ -192,17 +192,16 @@ private struct RuleRow: View {
                 Button(action: onExpand) {
                     Image(systemName: "chevron.right")
                         .font(.system(size: 11, weight: .semibold))
-                        .foregroundStyle(.tertiary)
                         .rotationEffect(.degrees(isExpanded ? 90 : 0))
-                        .frame(width: 20, height: 20)
-                        .contentShape(Rectangle())
+                        .frame(width: 16, height: 16)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.icon)
                 .disabled(items.isEmpty)
                 .opacity(items.isEmpty ? 0 : 1)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
+            .hoverRow()
             .contentShape(Rectangle())
             .onTapGesture { if !items.isEmpty { onExpand() } }
 
@@ -251,9 +250,8 @@ private struct ItemRow: View {
             } label: {
                 Image(systemName: "arrow.up.forward.square")
                     .font(.system(size: 11))
-                    .foregroundStyle(.tertiary)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(.icon)
             .help("Show in Finder")
 
             Spacer()
@@ -265,6 +263,7 @@ private struct ItemRow: View {
         .padding(.leading, 60)
         .padding(.trailing, 52)
         .padding(.vertical, 5)
+        .hoverRow()
     }
 }
 
@@ -297,8 +296,10 @@ struct ReportBanner: View {
                         .font(.system(size: 18, weight: .light))
                         .foregroundStyle(Theme.sage)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Moved \(report.movedCount) items · \(report.movedBytes.formattedBytes) to the Trash")
-                            .font(.system(size: 13, weight: .medium))
+                        Text(
+                            "Cleaned \(report.movedCount) items · \(report.movedBytes.formattedBytes) moved to the Trash"
+                        )
+                        .font(.system(size: 13, weight: .medium))
                         Text("Space is reclaimed once you empty the Trash.")
                             .font(.caption).foregroundStyle(.secondary)
                     }
@@ -315,8 +316,7 @@ struct ReportBanner: View {
                     Button(action: onDismiss) {
                         Image(systemName: "xmark").font(.system(size: 10, weight: .semibold))
                     }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(.tertiary)
+                    .buttonStyle(.icon)
                 }
                 if showFailures {
                     ScrollView {

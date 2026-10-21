@@ -10,7 +10,7 @@ struct SimulatorsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
                 PageHeader(
-                    title: AppSection.simulators.title, subtitle: AppSection.simulators.summary,
+                    title: AppSection.simulators.pageTitle, subtitle: AppSection.simulators.summary,
                     symbol: AppSection.simulators.symbol, tint: AppSection.simulators.tint
                 ) {
                     HStack(spacing: 10) {
@@ -123,7 +123,7 @@ struct SimulatorsView: View {
                         label: "Unavailable", value: store.unavailableBytes.formattedBytes,
                         caption: "\(store.unavailableDevices.count) orphaned devices")
                     Spacer()
-                    Button("Remove Unavailable…") { confirmUnavailable = true }
+                    Button("Clean Unavailable…") { confirmUnavailable = true }
                         .buttonStyle(.primary)
                         .disabled(
                             store.unavailableDevices.isEmpty || store.busy.contains(SimulatorsStore.unavailableKey))
@@ -133,12 +133,12 @@ struct SimulatorsView: View {
                         segments: [
                             .init(fraction: Double(store.runtimesBytes) / total, color: Theme.rose),
                             .init(fraction: Double(available) / total, color: Theme.rose.opacity(0.5)),
-                            .init(fraction: Double(store.unavailableBytes) / total, color: Theme.clay),
+                            .init(fraction: Double(store.unavailableBytes) / total, color: Theme.sand),
                         ], height: 8)
                     FlowLayout {
                         LegendDot(color: Theme.rose, label: "Runtimes", value: store.runtimesBytes.formattedBytes)
                         LegendDot(color: Theme.rose.opacity(0.5), label: "Devices", value: available.formattedBytes)
-                        LegendDot(color: Theme.clay, label: "Unavailable", value: store.unavailableBytes.formattedBytes)
+                        LegendDot(color: Theme.sand, label: "Unavailable", value: store.unavailableBytes.formattedBytes)
                     }
                 }
             }
@@ -164,16 +164,17 @@ struct SimulatorsView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
+        .hoverRow()
     }
 
     private func deviceRow(_ device: SimDevice) -> some View {
         HStack(spacing: 14) {
-            Glyph(symbol: "iphone", tint: device.isAvailable ? Theme.rose : Theme.clay, size: 32)
+            Glyph(symbol: "iphone", tint: device.isAvailable ? Theme.rose : Theme.sand, size: 32)
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 8) {
                     Text(device.name).font(.system(size: 13, weight: .medium))
                     if device.isBooted { StatusTag(text: "Booted", tone: Theme.sage) }
-                    if !device.isAvailable { StatusTag(text: "Unavailable", tone: Theme.clay) }
+                    if !device.isAvailable { StatusTag(text: "Unavailable", tone: Theme.sand) }
                 }
                 Text(
                     device.lastUsedAt.map { "Last used \($0.formatted(.relative(presentation: .named)))" }
@@ -193,6 +194,7 @@ struct SimulatorsView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
+        .hoverRow()
     }
 
     private func runtimeCaption(_ runtime: SimRuntime, deviceCount: Int) -> String {
@@ -211,11 +213,9 @@ struct SimulatorsView: View {
                 Button(action: action) {
                     Image(systemName: "trash")
                         .font(.system(size: 12))
-                        .frame(width: 28, height: 28)
-                        .contentShape(Rectangle())
+                        .frame(width: 22, height: 22)
                 }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
+                .buttonStyle(.icon)
                 .disabled(!enabled)
                 .opacity(enabled ? 1 : 0.3)
             }
