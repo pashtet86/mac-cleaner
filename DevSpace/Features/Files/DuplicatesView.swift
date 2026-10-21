@@ -25,12 +25,16 @@ struct DuplicatesView: View {
         return Card(padding: 24) {
             VStack(alignment: .leading, spacing: 22) {
                 HStack(alignment: .top, spacing: 48) {
-                    Stat(
-                        label: "To clean", value: store.selectedBytes.formattedBytes,
-                        caption: "\(store.selection.count) files", large: true)
+                    // The selection figure appears only once something is selected.
+                    if !store.selection.isEmpty {
+                        Stat(
+                            label: "To clean", value: store.selectedBytes.formattedBytes,
+                            caption: "\(store.selection.count) files", large: true)
+                    }
                     Stat(
                         label: "Wasted", value: store.wastedBytes.formattedBytes,
-                        caption: "\(copies) copies in \(store.duplicateGroups.count) groups")
+                        caption: "\(copies) copies in \(store.duplicateGroups.count) groups",
+                        large: store.selection.isEmpty)
                     Spacer()
                     Button("Clean Selected…") { isReviewing = true }
                         .buttonStyle(.primary)

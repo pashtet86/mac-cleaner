@@ -29,6 +29,27 @@ struct SectionAvailability {
         }
     }
 
+    /// Below this, a section isn't worth flagging.
+    static let attentionThreshold: Int64 = 100_000_000
+
+    /// Bytes that can be cleaned right away without review, when that is worth a red dot.
+    func attention(for section: AppSection) -> Int64? {
+        let bytes: Int64
+        switch section {
+        case .apps, .xcode, .ides, .packages:
+            guard cleanup.scannedAt != nil, let rules = section.ruleSection else { return nil }
+            bytes = cleanup.safeTotal(in: rules)
+        case .simulators:
+            bytes = simulators.unavailableBytes
+        case .docker:
+            guard docker.state == .running else { return nil }
+            bytes = docker.totalReclaimable
+        default:
+            return nil
+        }
+        return bytes >= Self.attentionThreshold ? bytes : nil
+    }
+
     func visible(_ sections: [AppSection], keeping selected: AppSection?) -> [AppSection] {
         sections.filter { state(of: $0) == true || $0 == selected }
     }

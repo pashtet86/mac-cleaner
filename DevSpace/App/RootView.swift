@@ -161,8 +161,18 @@ struct RootView: View {
     }
 
     private func row(_ section: AppSection) -> some View {
-        Label {
-            Text(section.title)
+        let attention = availability.attention(for: section)
+        return Label {
+            HStack {
+                Text(section.title)
+                Spacer(minLength: 4)
+                if let attention {
+                    AttentionDot()
+                        .help("\(attention.formattedBytes) safe to clean")
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
+            .animation(.hover, value: attention != nil)
         } icon: {
             Image(systemName: section.symbol).foregroundStyle(section.tint)
         }

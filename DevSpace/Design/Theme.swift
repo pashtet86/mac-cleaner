@@ -22,6 +22,8 @@ enum Theme {
     static let sage = Color(light: 0x2A9A5E, dark: 0x34A874)
     static let sand = Color(light: 0xC29512, dark: 0xBC8A1E)
     static let clay = Color(light: 0xC8445E, dark: 0xDD5C7C)
+    /// "Something to clean here" dot in the sidebar and on Overview cards.
+    static let attention = Color(light: 0xE5484D, dark: 0xFF6369)
     /// The user's own files in the Files Inspector.
     static let slate = Color(light: 0x5470B0, dark: 0x6A84C8)
 

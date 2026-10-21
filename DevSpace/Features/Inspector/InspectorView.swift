@@ -107,12 +107,16 @@ struct InspectorView: View {
         return Card(padding: 24) {
             VStack(alignment: .leading, spacing: 20) {
                 HStack(alignment: .top, spacing: 48) {
-                    Stat(
-                        label: "To clean", value: store.selectedBytes.formattedBytes,
-                        caption: "\(store.selected.count) items", large: true)
+                    // The selection figure appears only once something is selected.
+                    if !store.selected.isEmpty {
+                        Stat(
+                            label: "To clean", value: store.selectedBytes.formattedBytes,
+                            caption: "\(store.selected.count) items", large: true)
+                    }
                     Stat(
                         label: current.name, value: current.size.formattedBytes,
-                        caption: "\(current.children.count + current.smallCount) items inside")
+                        caption: "\(current.children.count + current.smallCount) items inside",
+                        large: store.selected.isEmpty)
                     Spacer()
                     Button("Clean Selected…") { isReviewing = true }
                         .buttonStyle(.primary)

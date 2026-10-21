@@ -393,6 +393,17 @@ struct FlowLayout: Layout {
     }
 }
 
+/// Small red dot marking a section with something worth cleaning.
+struct AttentionDot: View {
+    var body: some View {
+        Circle()
+            .fill(Theme.attention)
+            .frame(width: 7, height: 7)
+            .shadow(color: Theme.attention.opacity(0.5), radius: 3)
+            .accessibilityLabel("Something to clean")
+    }
+}
+
 /// Muted footnote naming supported items that were not found on this Mac.
 struct AlsoSupported: View {
     var title = "Also supported — not found on this Mac"

@@ -123,6 +123,16 @@ struct OverviewView: View {
                 VStack(alignment: .leading, spacing: 18) {
                     HStack {
                         Glyph(symbol: section.symbol, tint: section.tint, size: 34)
+                            .overlay(alignment: .topTrailing) {
+                                if let attention = availability.attention(for: section) {
+                                    // Badge on the icon corner, ringed in the card color.
+                                    AttentionDot()
+                                        .padding(2)
+                                        .background(Theme.card, in: Circle())
+                                        .offset(x: 4, y: -4)
+                                        .help("\(attention.formattedBytes) safe to clean")
+                                }
+                            }
                         Spacer()
                         Image(systemName: "arrow.right")
                             .font(.system(size: 11, weight: .semibold))

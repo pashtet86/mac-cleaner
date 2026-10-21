@@ -96,12 +96,16 @@ struct RulesPage: View {
         return Card(padding: 24) {
             VStack(alignment: .leading, spacing: 22) {
                 HStack(alignment: .top, spacing: 48) {
-                    Stat(
-                        label: "To clean", value: store.selectedBytes(in: ruleSection).formattedBytes,
-                        caption: "\(store.selectedItems(in: ruleSection).count) items", large: true)
+                    // The selection figure appears only once something is selected.
+                    if !store.selectedItems(in: ruleSection).isEmpty {
+                        Stat(
+                            label: "To clean", value: store.selectedBytes(in: ruleSection).formattedBytes,
+                            caption: "\(store.selectedItems(in: ruleSection).count) items", large: true)
+                    }
                     Stat(
                         label: "Cleanable", value: found.formattedBytes,
-                        caption: store.scannedAt.map { "Scanned \($0.formatted(.relative(presentation: .named)))" })
+                        caption: store.scannedAt.map { "Scanned \($0.formatted(.relative(presentation: .named)))" },
+                        large: store.selectedItems(in: ruleSection).isEmpty)
                     Spacer()
                     VStack(alignment: .trailing, spacing: 10) {
                         if store.isBusy {
