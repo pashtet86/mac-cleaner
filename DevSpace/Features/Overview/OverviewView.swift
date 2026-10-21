@@ -90,8 +90,8 @@ struct OverviewView: View {
                         label: "Available", value: volume.available.formattedBytes,
                         caption: "of \(volume.total.formattedBytes) on Macintosh HD", large: true)
                     Stat(label: "Used", value: volume.used.formattedBytes)
-                    Stat(label: "Safe to clean", value: reclaimable.formattedBytes)
                     Spacer()
+                    SafeToCleanPanel(bytes: reclaimable, sections: sectionsWithSafeBytes)
                 }
                 VStack(alignment: .leading, spacing: 12) {
                     CapacityBar(
@@ -138,13 +138,26 @@ struct OverviewView: View {
                             .font(.system(size: 11, weight: .semibold))
                             .foregroundStyle(.tertiary)
                     }
-                    Stat(label: section.title, value: value, caption: caption)
+                    Stat(
+                        label: section.title, value: value, caption: caption,
+                        captionTint: hasSafeBytes(section) ? Theme.sage : nil)
                 }
             }
             .hoverLift()
             .contentShape(.rect(cornerRadius: Theme.radius))
         }
         .buttonStyle(.plain)
+    }
+
+    private func hasSafeBytes(_ section: AppSection) -> Bool {
+        switch section {
+        case .docker: docker.state == .running && docker.totalReclaimable > 0
+        default: section.ruleSection.map { cleanup.safeTotal(in: $0) > 0 } ?? false
+        }
+    }
+
+    private var sectionsWithSafeBytes: Int {
+        [RuleSection.xcode, .ides, .packages, .apps].filter { cleanup.safeTotal(in: $0) > 0 }.count
     }
 
     private func figures(for section: AppSection) -> (String, String) {
@@ -171,6 +184,39 @@ struct OverviewView: View {
             return (
                 cleanup.total(in: rules).formattedBytes, "\(cleanup.safeTotal(in: rules).formattedBytes) safe to clean"
             )
+        }
+    }
+}
+
+/// The headline of the Overview: how much can go right now, without review.
+private struct SafeToCleanPanel: View {
+    let bytes: Int64
+    let sections: Int
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 6) {
+                Image(systemName: "sparkles").font(.system(size: 11, weight: .semibold))
+                Text("SAFE TO CLEAN").font(.eyebrow).tracking(1.1)
+            }
+            .foregroundStyle(Theme.sage)
+            Text(bytes.formattedBytes)
+                .font(.figure)
+                .foregroundStyle(Theme.sage)
+                .contentTransition(.numericText())
+            Text(
+                sections == 0
+                    ? "Nothing to clean right now"
+                    : "in \(sections) section\(sections == 1 ? "" : "s") · rebuilds by itself"
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
+        .background(Theme.sage.opacity(0.09), in: .rect(cornerRadius: 12, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(Theme.sage.opacity(0.22))
         }
     }
 }

@@ -10,6 +10,7 @@ and the project uses [Semantic Versioning](https://semver.org/). Entries are der
 - Overview with disk usage by category.
 - Files Inspector: drill-down treemap colored by deletion safety, with reasons; standard home folders can never be trashed.
 - Sections and rules appear only when something was found on this Mac.
+- CPU/SSD temperature and thermal state in the sidebar; "safe to clean" headline on Overview.
 - App Caches, Xcode, IDEs and Packages & Toolchains pages driven by `cleanup_rules.json`.
 - Simulators: runtimes, devices and orphaned devices via `simctl`.
 - Docker: usage and an allowlist of prune actions; volumes are never removed.

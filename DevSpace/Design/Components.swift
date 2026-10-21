@@ -80,6 +80,8 @@ struct Stat: View {
     let value: String
     var caption: String? = nil
     var large = false
+    /// Highlights the caption (e.g. "4 GB safe to clean") in this color with a check mark.
+    var captionTint: Color? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -88,9 +90,16 @@ struct Stat: View {
                 .font(large ? .figure : .figureSmall)
                 .contentTransition(.numericText())
             if let caption {
-                Text(caption)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                if let captionTint {
+                    Label(caption, systemImage: "checkmark.circle.fill")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(captionTint)
+                        .labelStyle(.titleAndIcon)
+                } else {
+                    Text(caption)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
         }
     }

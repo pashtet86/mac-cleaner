@@ -3,7 +3,7 @@ import SwiftUI
 enum AppSection: String, Hashable, CaseIterable {
     case overview, inspector, apps, xcode, simulators, ides, docker, packages, largeFiles, duplicates, security, network
 
-    static let mac: [AppSection] = [.inspector, .apps, .largeFiles, .duplicates]
+    static let mac: [AppSection] = [.apps, .largeFiles, .duplicates, .inspector]
     static let developer: [AppSection] = [.xcode, .simulators, .ides, .packages, .docker]
     static let upcoming: [AppSection] = [.security, .network]
     static let available: [AppSection] = [.overview] + mac + developer
@@ -42,17 +42,17 @@ enum AppSection: String, Hashable, CaseIterable {
 
     var symbol: String {
         switch self {
-        case .overview: "square.grid.2x2"
-        case .inspector: "rectangle.split.2x2"
-        case .apps: "sparkles"
+        case .overview: "gauge.with.dots.needle.50percent"
+        case .inspector: "square.split.bottomrightquarter"
+        case .apps: "tray.full"
         case .xcode: "hammer"
-        case .simulators: "iphone"
-        case .ides: "chevron.left.forwardslash.chevron.right"
-        case .docker: "shippingbox.and.arrow.backward"
-        case .packages: "cube.box"
-        case .largeFiles: "scalemass"
-        case .duplicates: "square.on.square"
-        case .security: "checkmark.shield"
+        case .simulators: "ipad.and.iphone"
+        case .ides: "curlybraces.square"
+        case .docker: "square.stack.3d.up"
+        case .packages: "shippingbox"
+        case .largeFiles: "square.resize.up"
+        case .duplicates: "doc.on.doc"
+        case .security: "lock.shield"
         case .network: "network"
         }
     }
@@ -111,7 +111,8 @@ struct RootView: View {
     }
 
     var body: some View {
-        NavigationSplitView {
+        // The sidebar is always visible: no toggle, and the visibility can't change.
+        NavigationSplitView(columnVisibility: .constant(.all)) {
             List(selection: $selection) {
                 Section {
                     row(.overview)
@@ -139,6 +140,13 @@ struct RootView: View {
                 }
             }
             .navigationSplitViewColumnWidth(min: 200, ideal: 224, max: 260)
+            .toolbar(removing: .sidebarToggle)
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                VStack(spacing: 0) {
+                    Divider().overlay(Theme.hairline)
+                    ThermalFooter()
+                }
+            }
             .animation(.snappy, value: availability.visible(AppSection.mac + AppSection.developer, keeping: nil))
         } detail: {
             let section = selection ?? .overview

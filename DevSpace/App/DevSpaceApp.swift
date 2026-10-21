@@ -7,6 +7,7 @@ struct DevSpaceApp: App {
     @State private var docker = DockerStore()
     @State private var files = FileScans()
     @State private var inspector = InspectorStore()
+    @State private var thermals = ThermalStore()
 
     var body: some Scene {
         WindowGroup {
@@ -16,6 +17,7 @@ struct DevSpaceApp: App {
                 .environment(docker)
                 .environment(files)
                 .environment(inspector)
+                .environment(thermals)
                 .frame(minWidth: 860, minHeight: 600)
         }
         .defaultSize(width: 1120, height: 780)

@@ -20,6 +20,7 @@ how risky that is and what happens next.
 | **IDEs** | Android Studio and the Android SDK (NDK, system images, build tools), JetBrains IDEs, VS Code / Cursor / Windsurf, Zed |
 | **Packages & Toolchains** | npm, Yarn, Bun, pnpm, Metro, Expo, CocoaPods, Gradle, SwiftPM, Homebrew, Cargo, rustup, Maven, Go, pip, uv and more |
 | **Docker** | Images, containers and build cache via the Docker CLI — volumes are never removed |
+| **Temperatures** | Hottest CPU core, SSD and the macOS thermal state, pinned to the bottom of the sidebar |
 
 Coming next: security audit (launch agents, login items, code signatures) and network (listening ports, firewall).
 
@@ -37,6 +38,9 @@ Coming next: security audit (launch agents, login items, code signatures) and ne
 - **No shell.** External tools (`xcrun simctl`, `docker`) run through `ProcessRunner` with argument arrays, from a
   fixed allowlist of operations; identifiers are validated first.
 - **Risk levels.** Every rule is `safe`, `probablySafe` or `review`. Only `safe` items are preselected.
+
+Temperatures come from IOKit's HID sensor service, a private API (the one Stats and iStat Menus use). It is loaded at
+runtime; if a macOS update removes it, the sidebar falls back to the public thermal state.
 
 ## Requirements
 
