@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Checks staged changes before every commit. Bypass in an emergency with --no-verify.
+set -uo pipefail
+
+red() { printf '\033[31m✖ %s\033[0m\n' "$1"; }
+fail=0
+
+staged=()
+while IFS= read -r -d '' file; do staged+=("$file"); done \
+    < <(git diff --cached --name-only --diff-filter=ACMR -z)
+[ ${#staged[@]} -eq 0 ] && exit 0
+
+# 1. Formatting of staged Swift files.
+swift_files=()
+for file in "${staged[@]}"; do [[ "$file" == *.swift ]] && swift_files+=("$file"); done
+if [ ${#swift_files[@]} -gt 0 ]; then
+    if ! xcrun swift-format lint --strict "${swift_files[@]}"; then
+        red "swift-format found issues — run 'make format' and stage the result"
+        fail=1
+    fi
+fi
+
+# 2. JSON must parse (cleanup rules are loaded at runtime).
+for file in "${staged[@]}"; do
+    if [[ "$file" == *.json ]] && ! python3 -m json.tool "$file" > /dev/null 2>&1; then
+        red "Invalid JSON: $file"
+        fail=1
+    fi
+done
+
+# 3. Build output, user state and local notes never belong in the repo.
+for file in "${staged[@]}"; do
+    if [[ "$file" =~ (^|/)(build|DerivedData|xcuserdata)/ || "$file" == *.xcuserstate || "$file" == CLAUDE.local.md ]]; then
+        red "Not for the repository: $file"
+        fail=1
+    fi
+done
+
+# 4. Large files.
+for file in "${staged[@]}"; do
+    size=$(git cat-file -s ":$file" 2> /dev/null || echo 0)
+    if [ "$size" -gt 2000000 ]; then
+        red "File over 2 MB: $file"
+        fail=1
+    fi
+done
+
+# 5. Secrets and personal paths in added lines (hooks themselves are exempt).
+added=$(git diff --cached -U0 --diff-filter=ACMR -- . ':(exclude).githooks' | grep -E '^\+[^+]' || true)
+secret_patterns='-----BEGIN [A-Z ]*PRIVATE KEY-----|AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{36}|xox[abprs]-[A-Za-z0-9-]{10,}|AIza[0-9A-Za-z_-]{35}|sk-[A-Za-z0-9_-]{32,}'
+if grep -Eq -- "$secret_patterns" <<< "$added"; then
+    red "Possible secret in staged changes — use an environment variable instead"
+    fail=1
+fi
+if grep -Eo '/Users/[A-Za-z0-9._-]+/' <<< "$added" | grep -vq '^/Users/Shared/$'; then
+    red "Absolute home path in staged changes — use ~ or FileManager.homeDirectoryForCurrentUser"
+    fail=1
+fi
+
+exit $fail

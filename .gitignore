@@ -1,0 +1,16 @@
+# Build output
+build/
+DerivedData/
+*.xcarchive
+
+# Xcode user state
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+
+# macOS
+.DS_Store
+
+# Local, machine-specific notes (may contain personal audit data)
+CLAUDE.local.md
+.claude/settings.local.json

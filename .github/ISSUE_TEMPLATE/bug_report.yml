@@ -1,0 +1,33 @@
+name: Bug report
+description: Something works incorrectly or crashes
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Please remove personal file names, paths and machine names from logs and screenshots.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you saw instead.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [Overview, App Caches, Large Files & Duplicates, Xcode, Simulators, IDEs, Packages & Toolchains, Docker, Other]
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: macOS and Xcode versions
+      placeholder: macOS 26.1, Xcode 26.1
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      render: shell

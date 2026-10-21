@@ -1,0 +1,33 @@
+name: New cleanup rule
+description: Propose a cache or artifact folder the app should clean
+labels: [cleanup-rule]
+body:
+  - type: input
+    id: tool
+    attributes:
+      label: Tool or app
+      placeholder: e.g. Flutter, Unity, JetBrains Toolbox
+    validations:
+      required: true
+  - type: textarea
+    id: paths
+    attributes:
+      label: Paths
+      description: Use ~ for the home folder. One per line.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: rebuild
+    attributes:
+      label: What happens after deleting it?
+      description: Is it rebuilt automatically? Is anything lost (logins, settings, local-only data)? Link documentation if possible.
+    validations:
+      required: true
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Suggested risk level
+      options: [safe, probablySafe, review]
+    validations:
+      required: true

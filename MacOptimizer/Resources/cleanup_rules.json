@@ -1,0 +1,546 @@
+[
+  {
+    "id": "xcode-derived-data",
+    "section": "xcode",
+    "title": "DerivedData",
+    "detail": "Build products and indexes. Xcode rebuilds them on the next build.",
+    "symbol": "hammer",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Developer/Xcode/DerivedData"
+    ],
+    "closeApps": [
+      "com.apple.dt.Xcode"
+    ]
+  },
+  {
+    "id": "xcode-previews",
+    "section": "xcode",
+    "title": "SwiftUI Previews",
+    "detail": "Preview build cache. Regenerated when you open a canvas.",
+    "symbol": "rectangle.on.rectangle",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Developer/Xcode/UserData/Previews"
+    ],
+    "closeApps": [
+      "com.apple.dt.Xcode"
+    ]
+  },
+  {
+    "id": "xcode-caches",
+    "section": "xcode",
+    "title": "Xcode caches",
+    "detail": "Xcode's own download and documentation caches.",
+    "symbol": "internaldrive",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Caches/com.apple.dt.Xcode"
+    ],
+    "closeApps": [
+      "com.apple.dt.Xcode"
+    ]
+  },
+  {
+    "id": "coresimulator-caches",
+    "section": "xcode",
+    "title": "Simulator caches",
+    "detail": "Dyld and runtime caches for iOS simulators.",
+    "symbol": "iphone",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Developer/CoreSimulator/Caches"
+    ],
+    "closeApps": [
+      "com.apple.iphonesimulator"
+    ]
+  },
+  {
+    "id": "ios-device-support",
+    "section": "xcode",
+    "title": "Device support",
+    "detail": "Debug symbols copied from physical iPhones and Watches. Copied again, slowly, the next time a device connects.",
+    "symbol": "iphone.gen3",
+    "risk": "review",
+    "paths": [
+      "~/Library/Developer/Xcode/iOS DeviceSupport",
+      "~/Library/Developer/Xcode/watchOS DeviceSupport"
+    ]
+  },
+  {
+    "id": "xcode-archives",
+    "section": "xcode",
+    "title": "Archives",
+    "detail": "Archived releases with dSYMs, needed to symbolicate crash reports from shipped versions.",
+    "symbol": "archivebox",
+    "risk": "review",
+    "paths": [
+      "~/Library/Developer/Xcode/Archives"
+    ]
+  },
+  {
+    "id": "npm-cache",
+    "section": "packages",
+    "title": "npm",
+    "detail": "Downloaded package tarballs. Equivalent to npm cache clean --force.",
+    "symbol": "shippingbox",
+    "risk": "safe",
+    "paths": [
+      "~/.npm/_cacache"
+    ]
+  },
+  {
+    "id": "yarn-cache",
+    "section": "packages",
+    "title": "Yarn",
+    "detail": "Yarn classic and Berry package caches.",
+    "symbol": "shippingbox",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Caches/Yarn",
+      "~/.yarn/berry/cache"
+    ]
+  },
+  {
+    "id": "bun-cache",
+    "section": "packages",
+    "title": "Bun",
+    "detail": "Bun's global install cache.",
+    "symbol": "shippingbox",
+    "risk": "safe",
+    "paths": [
+      "~/.bun/install/cache"
+    ]
+  },
+  {
+    "id": "pnpm-store",
+    "section": "packages",
+    "title": "pnpm store",
+    "detail": "Content-addressed store shared by projects. Projects re-link on the next install.",
+    "symbol": "shippingbox",
+    "risk": "probablySafe",
+    "paths": [
+      "~/Library/pnpm/store"
+    ]
+  },
+  {
+    "id": "metro-cache",
+    "section": "packages",
+    "title": "Metro bundler",
+    "detail": "React Native transform cache in the temporary folder.",
+    "symbol": "bolt",
+    "risk": "safe",
+    "paths": [
+      "$TMPDIR"
+    ],
+    "namePrefixes": [
+      "metro-",
+      "haste-map"
+    ]
+  },
+  {
+    "id": "expo-cache",
+    "section": "packages",
+    "title": "Expo",
+    "detail": "Expo Go builds, templates and APK caches. Login state and signing data are kept.",
+    "symbol": "square.stack.3d.up",
+    "risk": "probablySafe",
+    "paths": [
+      "~/.expo"
+    ],
+    "namePrefixes": [
+      "android-apk-cache",
+      "expo-go",
+      "ios-simulator-app-cache",
+      "native-modules-cache",
+      "schema-cache",
+      "template-cache",
+      "versions-cache"
+    ]
+  },
+  {
+    "id": "cocoapods-cache",
+    "section": "packages",
+    "title": "CocoaPods",
+    "detail": "Downloaded pod sources. pod install fetches them again.",
+    "symbol": "leaf",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Caches/CocoaPods"
+    ]
+  },
+  {
+    "id": "cocoapods-repos",
+    "section": "packages",
+    "title": "CocoaPods spec repos",
+    "detail": "Local clones of spec repositories. Private spec repos must be re-added with pod repo add.",
+    "symbol": "leaf",
+    "risk": "review",
+    "paths": [
+      "~/.cocoapods/repos"
+    ]
+  },
+  {
+    "id": "gradle-caches",
+    "section": "packages",
+    "title": "Gradle",
+    "detail": "Dependency caches and downloaded Gradle distributions. The next Android build downloads them again.",
+    "symbol": "cube",
+    "risk": "safe",
+    "paths": [
+      "~/.gradle/caches",
+      "~/.gradle/wrapper/dists"
+    ],
+    "closeApps": [
+      "com.google.android.studio"
+    ]
+  },
+  {
+    "id": "swiftpm-cache",
+    "section": "packages",
+    "title": "Swift Package Manager",
+    "detail": "Cached package checkouts and manifests.",
+    "symbol": "swift",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Caches/org.swift.swiftpm"
+    ]
+  },
+  {
+    "id": "homebrew-cache",
+    "section": "packages",
+    "title": "Homebrew",
+    "detail": "Downloaded bottles and source archives. Equivalent to brew cleanup --prune=all.",
+    "symbol": "mug",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Caches/Homebrew"
+    ]
+  },
+  {
+    "id": "cargo-registry",
+    "section": "packages",
+    "title": "Cargo",
+    "detail": "Downloaded crates and git checkouts. cargo fetches them again on the next build.",
+    "symbol": "gearshape.2",
+    "risk": "safe",
+    "paths": [
+      "~/.cargo/registry/cache",
+      "~/.cargo/registry/src",
+      "~/.cargo/git/checkouts"
+    ]
+  },
+  {
+    "id": "rustup-toolchains",
+    "section": "packages",
+    "title": "Rust toolchains",
+    "detail": "Installed rustup toolchains. Remove old nightlies and versions no project pins.",
+    "symbol": "gearshape",
+    "risk": "review",
+    "paths": [
+      "~/.rustup/toolchains"
+    ]
+  },
+  {
+    "id": "maven-repository",
+    "section": "packages",
+    "title": "Maven",
+    "detail": "Local Maven repository. Downloaded again on build; artifacts installed with mvn install are lost.",
+    "symbol": "cup.and.saucer",
+    "risk": "probablySafe",
+    "paths": [
+      "~/.m2/repository"
+    ]
+  },
+  {
+    "id": "go-cache",
+    "section": "packages",
+    "title": "Go",
+    "detail": "Build cache (safe) and module downloads, refetched by go build.",
+    "symbol": "hare",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Caches/go-build",
+      "~/go/pkg/mod/cache/download"
+    ]
+  },
+  {
+    "id": "pip-cache",
+    "section": "packages",
+    "title": "pip",
+    "detail": "Downloaded wheels. Equivalent to pip cache purge.",
+    "symbol": "chevron.left.forwardslash.chevron.right",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Caches/pip"
+    ]
+  },
+  {
+    "id": "uv-cache",
+    "section": "packages",
+    "title": "uv",
+    "detail": "Python package cache. Equivalent to uv cache clean; installed Pythons are kept.",
+    "symbol": "bolt.horizontal",
+    "risk": "safe",
+    "paths": [
+      "~/.cache/uv"
+    ]
+  },
+  {
+    "id": "puppeteer-browsers",
+    "section": "packages",
+    "title": "Puppeteer browsers",
+    "detail": "Chrome builds downloaded by Puppeteer. Reinstalled by npm install or npx puppeteer browsers install.",
+    "symbol": "globe",
+    "risk": "probablySafe",
+    "paths": [
+      "~/.cache/puppeteer"
+    ]
+  },
+  {
+    "id": "composer-deno",
+    "section": "packages",
+    "title": "Composer & Deno",
+    "detail": "PHP and Deno package caches.",
+    "symbol": "shippingbox",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Caches/composer",
+      "~/Library/Caches/deno"
+    ]
+  },
+  {
+    "id": "android-studio-caches",
+    "section": "ides",
+    "title": "Android Studio caches",
+    "detail": "Indexes and system caches for every installed Android Studio version. Rebuilt on the next launch.",
+    "symbol": "internaldrive",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Caches/Google"
+    ],
+    "namePrefixes": [
+      "AndroidStudio"
+    ],
+    "closeApps": [
+      "com.google.android.studio"
+    ]
+  },
+  {
+    "id": "android-ndk",
+    "section": "ides",
+    "title": "Android NDK versions",
+    "detail": "Native toolchains, one folder per version. Keep the ones your projects pin with ndkVersion.",
+    "symbol": "cpu",
+    "risk": "review",
+    "paths": [
+      "~/Library/Android/sdk/ndk"
+    ]
+  },
+  {
+    "id": "android-system-images",
+    "section": "ides",
+    "title": "Android system images",
+    "detail": "Emulator OS images by API level. Emulators using a removed image stop booting until it is reinstalled.",
+    "symbol": "smartphone",
+    "risk": "review",
+    "paths": [
+      "~/Library/Android/sdk/system-images"
+    ]
+  },
+  {
+    "id": "android-build-tools",
+    "section": "ides",
+    "title": "Android build tools",
+    "detail": "aapt, d8 and friends by version. Gradle downloads the version a project needs.",
+    "symbol": "wrench.and.screwdriver",
+    "risk": "review",
+    "paths": [
+      "~/Library/Android/sdk/build-tools"
+    ]
+  },
+  {
+    "id": "android-platforms",
+    "section": "ides",
+    "title": "Android SDK platforms",
+    "detail": "android.jar per API level. Keep the compileSdk your projects target.",
+    "symbol": "square.stack.3d.up",
+    "risk": "review",
+    "paths": [
+      "~/Library/Android/sdk/platforms"
+    ]
+  },
+  {
+    "id": "jetbrains-caches",
+    "section": "ides",
+    "title": "JetBrains IDEs",
+    "detail": "Indexes and caches for IntelliJ IDEA, RustRover, PyCharm, GoLand, CLion, WebStorm, Rider and Fleet.",
+    "symbol": "curlybraces",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Caches/JetBrains"
+    ],
+    "closeApps": [
+      "com.jetbrains.intellij",
+      "com.jetbrains.intellij.ce",
+      "com.jetbrains.rustrover",
+      "com.jetbrains.pycharm",
+      "com.jetbrains.pycharm.ce",
+      "com.jetbrains.goland",
+      "com.jetbrains.clion",
+      "com.jetbrains.WebStorm",
+      "com.jetbrains.rider",
+      "com.jetbrains.fleet"
+    ]
+  },
+  {
+    "id": "vscode-family",
+    "section": "ides",
+    "title": "VS Code, Cursor, Windsurf",
+    "detail": "Chromium caches and downloaded update data. Settings, extensions and workspaces are kept.",
+    "symbol": "chevron.left.forwardslash.chevron.right",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Application Support/Code/Cache",
+      "~/Library/Application Support/Code/CachedData",
+      "~/Library/Application Support/Code/CachedExtensionVSIXs",
+      "~/Library/Application Support/Code/Code Cache",
+      "~/Library/Application Support/Code/GPUCache",
+      "~/Library/Application Support/Code/Service Worker/CacheStorage",
+      "~/Library/Application Support/Cursor/Cache",
+      "~/Library/Application Support/Cursor/CachedData",
+      "~/Library/Application Support/Cursor/CachedExtensionVSIXs",
+      "~/Library/Application Support/Cursor/Code Cache",
+      "~/Library/Application Support/Cursor/GPUCache",
+      "~/Library/Application Support/Cursor/Service Worker/CacheStorage",
+      "~/Library/Application Support/Windsurf/Cache",
+      "~/Library/Application Support/Windsurf/CachedData",
+      "~/Library/Application Support/Windsurf/CachedExtensionVSIXs",
+      "~/Library/Application Support/Windsurf/Code Cache",
+      "~/Library/Application Support/Windsurf/GPUCache",
+      "~/Library/Application Support/Windsurf/Service Worker/CacheStorage",
+      "~/Library/Application Support/VSCodium/Cache",
+      "~/Library/Application Support/VSCodium/CachedData",
+      "~/Library/Application Support/VSCodium/CachedExtensionVSIXs",
+      "~/Library/Application Support/VSCodium/Code Cache",
+      "~/Library/Application Support/VSCodium/GPUCache",
+      "~/Library/Application Support/VSCodium/Service Worker/CacheStorage"
+    ],
+    "closeApps": [
+      "com.microsoft.VSCode",
+      "com.todesktop.230313mzl4w4u92",
+      "com.exafunction.windsurf",
+      "com.vscodium"
+    ]
+  },
+  {
+    "id": "vscode-workspace-storage",
+    "section": "ides",
+    "title": "Editor workspace storage",
+    "detail": "Per-project state such as local history and extension data, including folders for projects that no longer exist.",
+    "symbol": "folder",
+    "risk": "review",
+    "paths": [
+      "~/Library/Application Support/Code/User/workspaceStorage",
+      "~/Library/Application Support/Cursor/User/workspaceStorage"
+    ],
+    "closeApps": [
+      "com.microsoft.VSCode",
+      "com.todesktop.230313mzl4w4u92"
+    ]
+  },
+  {
+    "id": "zed-cache",
+    "section": "ides",
+    "title": "Zed",
+    "detail": "Zed's language-server downloads and caches.",
+    "symbol": "text.cursor",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Caches/Zed"
+    ],
+    "closeApps": [
+      "dev.zed.Zed"
+    ]
+  },
+  {
+    "id": "user-caches",
+    "section": "apps",
+    "title": "App caches",
+    "detail": "Everything else in ~/Library/Caches. Apps rebuild these as needed.",
+    "symbol": "internaldrive",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Caches"
+    ],
+    "excludePrefixes": [
+      "com.apple.dt.Xcode",
+      "Yarn",
+      "CocoaPods",
+      "org.swift.swiftpm",
+      "Homebrew",
+      "Google",
+      "JetBrains",
+      "Zed",
+      "go-build",
+      "pip",
+      "composer",
+      "deno"
+    ]
+  },
+  {
+    "id": "google-caches",
+    "section": "apps",
+    "title": "Google apps",
+    "detail": "Chrome and other Google app caches.",
+    "symbol": "globe",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Caches/Google"
+    ],
+    "excludePrefixes": [
+      "AndroidStudio"
+    ],
+    "closeApps": [
+      "com.google.Chrome"
+    ]
+  },
+  {
+    "id": "user-logs",
+    "section": "apps",
+    "title": "Logs",
+    "detail": "Diagnostic logs written by apps.",
+    "symbol": "doc.text",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Logs"
+    ]
+  },
+  {
+    "id": "slack-cache",
+    "section": "apps",
+    "title": "Slack",
+    "detail": "Cached media and service-worker storage. Messages stay on the server.",
+    "symbol": "bubble.left.and.bubble.right",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Application Support/Slack/Cache",
+      "~/Library/Application Support/Slack/Service Worker/CacheStorage"
+    ],
+    "closeApps": [
+      "com.tinyspeck.slackmacgap"
+    ]
+  },
+  {
+    "id": "updater-caches",
+    "section": "apps",
+    "title": "Updater downloads",
+    "detail": "Downloaded installers kept by Google and Dropbox updaters.",
+    "symbol": "arrow.down.circle",
+    "risk": "safe",
+    "paths": [
+      "~/Library/Application Support/Google/GoogleUpdater/crx_cache",
+      "~/Library/Application Support/DropboxUpdater/crx_cache"
+    ]
+  }
+]
