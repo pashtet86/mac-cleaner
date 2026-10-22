@@ -112,7 +112,7 @@ struct SimulatorsView: View {
         let total = Double(max(store.runtimesBytes + store.devicesBytes, 1))
         return Card(padding: 24) {
             VStack(alignment: .leading, spacing: 22) {
-                HStack(alignment: .top, spacing: 48) {
+                SummaryLayout {
                     Stat(
                         label: "Runtimes", value: store.runtimesBytes.formattedBytes,
                         caption: "\(store.runtimes.count) installed", large: true)
@@ -122,7 +122,7 @@ struct SimulatorsView: View {
                     Stat(
                         label: "Unavailable", value: store.unavailableBytes.formattedBytes,
                         caption: "\(store.unavailableDevices.count) orphaned devices")
-                    Spacer()
+                } action: {
                     Button("Clean Unavailable…") { confirmUnavailable = true }
                         .buttonStyle(.primary)
                         .disabled(

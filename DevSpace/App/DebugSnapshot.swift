@@ -34,6 +34,18 @@ enum DebugSnapshot {
             }
             files.duplicates.selectAllButOldest()
         }
+        // `-snapshotSize 860x640` checks layouts at small window sizes.
+        let args = ProcessInfo.processInfo.arguments
+        if let index = args.firstIndex(of: "-snapshotSize"), args.indices.contains(index + 1) {
+            let parts = args[index + 1].split(separator: "x").compactMap { Double($0) }
+            if parts.count == 2, let window = NSApp.windows.first(where: \.isVisible) {
+                try? await Task.sleep(for: .seconds(1))
+                var frame = window.frame
+                frame.size =
+                    window.frameRect(forContentRect: NSRect(x: 0, y: 0, width: parts[0], height: parts[1])).size
+                window.setFrame(frame, display: true)
+            }
+        }
         try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         for appearance in [NSAppearance.Name.aqua, .darkAqua] {
             NSApp.appearance = NSAppearance(named: appearance)

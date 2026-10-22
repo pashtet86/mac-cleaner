@@ -7,6 +7,8 @@ final class ThermalStore {
     private(set) var cpu: Double?
     private(set) var ssd: Double?
     private(set) var state: ProcessInfo.ThermalState = ProcessInfo.processInfo.thermalState
+    /// Startup disk, refreshed with the sensors so cleaning shows up within seconds.
+    private(set) var volume: DiskUsage.Volume? = DiskUsage.bootVolume()
     /// RPM per fan; empty until the first reading.
     private(set) var fans: [Double] = []
 
@@ -36,6 +38,7 @@ final class ThermalStore {
 
     private func refresh() async {
         state = ProcessInfo.processInfo.thermalState
+        volume = DiskUsage.bootVolume()
         let sensors = sensors
         let fanReader = fanReader
         let (reading, speeds) = await Task.detached(priority: .utility) {

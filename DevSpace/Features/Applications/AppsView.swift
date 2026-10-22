@@ -94,7 +94,7 @@ struct AppsView: View {
 
     private var summary: some View {
         Card(padding: 24) {
-            HStack(alignment: .top, spacing: 48) {
+            SummaryLayout {
                 Stat(
                     label: "Applications", value: store.totalBytes.formattedBytes,
                     caption: "\(store.apps.count) apps" + (store.isMeasuring ? " · measuring…" : ""), large: true)
@@ -105,7 +105,6 @@ struct AppsView: View {
                         caption: "\(store.unusedApps.count) apps",
                         captionTint: Theme.sand)
                 }
-                Spacer()
             }
         }
     }

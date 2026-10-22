@@ -29,7 +29,7 @@ struct LargeFilesView: View {
         let kinds = FileKind.allCases.filter { store.bytes(of: $0) > 0 }
         return Card(padding: 24) {
             VStack(alignment: .leading, spacing: 22) {
-                HStack(alignment: .top, spacing: 48) {
+                SummaryLayout {
                     // The selection figure appears only once something is selected.
                     if !store.selection.isEmpty {
                         Stat(
@@ -40,7 +40,7 @@ struct LargeFilesView: View {
                         label: "Large files", value: store.largeBytes.formattedBytes,
                         caption: "\(store.largeFiles.count) over \(store.minimumSize.label)",
                         large: store.selection.isEmpty)
-                    Spacer()
+                } action: {
                     Button("Clean Selected…") { isReviewing = true }
                         .buttonStyle(.primary)
                         .disabled(store.selection.isEmpty || store.phase != .ready)

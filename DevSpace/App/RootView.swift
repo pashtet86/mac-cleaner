@@ -119,41 +119,43 @@ struct RootView: View {
     var body: some View {
         // The sidebar is always visible: no toggle, and the visibility can't change.
         NavigationSplitView(columnVisibility: .constant(.all)) {
-            List(selection: $selection) {
-                Section {
-                    row(.overview)
-                }
-                Section("Clean Mac") {
-                    ForEach(availability.visible(AppSection.mac, keeping: selection), id: \.self, content: row)
-                }
-                Section("Clean Dev Tools") {
-                    ForEach(availability.visible(AppSection.developer, keeping: selection), id: \.self, content: row)
-                    if availability.isDetecting {
-                        Label {
-                            Text("Detecting…").foregroundStyle(.tertiary)
-                        } icon: {
-                            ProgressView().controlSize(.mini)
-                        }
-                        .selectionDisabled()
+            // List on top, sensors pinned flush to the bottom edge.
+            VStack(spacing: 0) {
+                List(selection: $selection) {
+                    Section {
+                        row(.overview)
                     }
-                }
-                Section("Soon") {
-                    ForEach(AppSection.upcoming, id: \.self) { section in
-                        Label(section.title, systemImage: section.symbol)
-                            .foregroundStyle(.tertiary)
+                    Section("Clean Mac") {
+                        ForEach(availability.visible(AppSection.mac, keeping: selection), id: \.self, content: row)
+                    }
+                    Section("Clean Dev Tools") {
+                        ForEach(
+                            availability.visible(AppSection.developer, keeping: selection), id: \.self, content: row)
+                        if availability.isDetecting {
+                            Label {
+                                Text("Detecting…").foregroundStyle(.tertiary)
+                            } icon: {
+                                ProgressView().controlSize(.mini)
+                            }
                             .selectionDisabled()
+                        }
+                    }
+                    Section("Soon") {
+                        ForEach(AppSection.upcoming, id: \.self) { section in
+                            Label(section.title, systemImage: section.symbol)
+                                .foregroundStyle(.tertiary)
+                                .selectionDisabled()
+                        }
                     }
                 }
+                .animation(.snappy, value: availability.visible(AppSection.mac + AppSection.developer, keeping: nil))
+                .frame(maxHeight: .infinity)
+                Divider().overlay(Theme.hairline)
+                ThermalFooter()
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .navigationSplitViewColumnWidth(min: 200, ideal: 224, max: 260)
             .toolbar(removing: .sidebarToggle)
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                VStack(spacing: 0) {
-                    Divider().overlay(Theme.hairline)
-                    ThermalFooter()
-                }
-            }
-            .animation(.snappy, value: availability.visible(AppSection.mac + AppSection.developer, keeping: nil))
         } detail: {
             let section = selection ?? .overview
             switch section {

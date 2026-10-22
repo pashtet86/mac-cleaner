@@ -5,7 +5,8 @@ struct ThermalFooter: View {
     @Environment(ThermalStore.self) private var store
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 7) {
+        VStack(alignment: .leading, spacing: 6) {
+            if let volume = store.volume { disk(volume) }
             HStack(spacing: 10) {
                 icon("thermometer.medium")
                 if store.hasSensors {
@@ -15,8 +16,10 @@ struct ThermalFooter: View {
                 Spacer(minLength: 4)
                 HStack(spacing: 5) {
                     Circle().fill(store.state.tone).frame(width: 6, height: 6)
-                    Text(store.state.label)
+                    // A green dot says "normal"; words appear only when there is something to warn about.
+                    if store.state != .nominal { Text(store.state.label) }
                 }
+                .help("Thermal state: \(store.state.label)")
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(.secondary)
             }
@@ -30,7 +33,8 @@ struct ThermalFooter: View {
             }
         }
         .padding(.horizontal, 14)
-        .padding(.vertical, 10)
+        .padding(.top, 9)
+        .padding(.bottom, 11)
         .help(
             store.hasSensors
                 ? "Hottest CPU core and SSD temperature, fan speed and the thermal state reported by macOS."
@@ -38,6 +42,29 @@ struct ThermalFooter: View {
         )
         .task { store.start() }
         .onDisappear { store.stop() }
+    }
+
+    private func disk(_ volume: DiskUsage.Volume) -> some View {
+        let used = Double(volume.used) / Double(max(volume.total, 1))
+        // Calm until the disk gets tight.
+        let tone = used >= 0.9 ? Theme.attention : (used >= 0.8 ? Theme.sand : Theme.accent.opacity(0.75))
+        return HStack(spacing: 10) {
+            icon("internaldrive")
+            CapacityBar(segments: [.init(fraction: used, color: tone)], height: 5)
+            Text("\(Self.roundedGigabytes(volume.available)) free")
+                .font(.system(size: 11, weight: .medium))
+                .monospacedDigit()
+                .lineLimit(1)
+                .fixedSize()
+        }
+        .help("Macintosh HD: \(volume.used.formattedBytes) used of \(volume.total.formattedBytes)")
+    }
+
+    /// Whole gigabytes ("158 GB") — the footer is a glance, not a report. Below 1 GB the exact value.
+    private static func roundedGigabytes(_ bytes: Int64) -> String {
+        let gigabytes = Double(bytes) / 1_000_000_000
+        guard gigabytes >= 1 else { return bytes.formattedBytes }
+        return "\(Int(gigabytes.rounded()).formatted()) GB"
     }
 
     private var fansSpinning: Bool { store.fans.contains { $0 > 0 } }

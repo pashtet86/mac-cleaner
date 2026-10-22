@@ -30,8 +30,12 @@ final class InspectorStore {
 
     // MARK: - Navigation
 
+    /// Opens a folder below the current one — also one picked inside a tile's mosaic,
+    /// in which case the folders in between are added to the path too.
     func open(_ node: InspectorNode) {
-        guard node.canOpen else { return }
+        guard node.canOpen, let current else { return }
+        let between = node.ancestors.prefix { $0 !== current }
+        if between.count < node.ancestors.count { path.append(contentsOf: between.reversed()) }
         path.append(node)
         focused = nil
     }

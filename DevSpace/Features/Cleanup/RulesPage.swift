@@ -95,7 +95,7 @@ struct RulesPage: View {
         let found = store.total(in: ruleSection)
         return Card(padding: 24) {
             VStack(alignment: .leading, spacing: 22) {
-                HStack(alignment: .top, spacing: 48) {
+                SummaryLayout {
                     // The selection figure appears only once something is selected.
                     if !store.selectedItems(in: ruleSection).isEmpty {
                         Stat(
@@ -106,7 +106,7 @@ struct RulesPage: View {
                         label: "Cleanable", value: found.formattedBytes,
                         caption: store.scannedAt.map { "Scanned \($0.formatted(.relative(presentation: .named)))" },
                         large: store.selectedItems(in: ruleSection).isEmpty)
-                    Spacer()
+                } action: {
                     VStack(alignment: .trailing, spacing: 10) {
                         if store.isBusy {
                             HStack(spacing: 8) {

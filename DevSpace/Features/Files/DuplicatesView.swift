@@ -24,7 +24,7 @@ struct DuplicatesView: View {
         let copies = store.duplicateGroups.reduce(0) { $0 + $1.files.count }
         return Card(padding: 24) {
             VStack(alignment: .leading, spacing: 22) {
-                HStack(alignment: .top, spacing: 48) {
+                SummaryLayout {
                     // The selection figure appears only once something is selected.
                     if !store.selection.isEmpty {
                         Stat(
@@ -35,7 +35,7 @@ struct DuplicatesView: View {
                         label: "Wasted", value: store.wastedBytes.formattedBytes,
                         caption: "\(copies) copies in \(store.duplicateGroups.count) groups",
                         large: store.selection.isEmpty)
-                    Spacer()
+                } action: {
                     Button("Clean Selected…") { isReviewing = true }
                         .buttonStyle(.primary)
                         .disabled(store.selection.isEmpty || store.phase != .ready)

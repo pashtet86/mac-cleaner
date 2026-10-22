@@ -86,12 +86,12 @@ struct OverviewView: View {
 
         return Card(padding: 24) {
             VStack(alignment: .leading, spacing: 22) {
-                HStack(alignment: .top, spacing: 48) {
+                SummaryLayout {
                     Stat(
                         label: "Available", value: volume.available.formattedBytes,
                         caption: "of \(volume.total.formattedBytes) on Macintosh HD", large: true)
                     Stat(label: "Used", value: volume.used.formattedBytes)
-                    Spacer()
+                } action: {
                     SafeToCleanPanel(bytes: reclaimable, sections: sectionsWithSafeBytes)
                 }
                 VStack(alignment: .leading, spacing: 12) {

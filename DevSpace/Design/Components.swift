@@ -27,6 +27,8 @@ struct Eyebrow: View {
             .font(.eyebrow)
             .tracking(1.1)
             .foregroundStyle(.secondary)
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
     }
 }
 
@@ -86,8 +88,11 @@ struct Stat: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Eyebrow(label)
+            // Figures never break across lines; in tight space they shrink a little instead.
             Text(value)
                 .font(large ? .figure : .figureSmall)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
                 .contentTransition(.numericText())
             if let caption {
                 if let captionTint {
@@ -155,6 +160,37 @@ struct CapacityBar: View {
     }
 }
 
+/// Summary row that adapts to the window: figures and action side by side when there is
+/// room, the action below the figures when narrow, and stacked figures when narrower still.
+struct SummaryLayout<Stats: View, Action: View>: View {
+    @ViewBuilder var stats: Stats
+    @ViewBuilder var action: Action
+
+    var body: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .top, spacing: 48) {
+                stats
+                Spacer(minLength: 24)
+                action
+            }
+            VStack(alignment: .leading, spacing: 20) {
+                HStack(alignment: .top, spacing: 32) { stats }
+                action
+            }
+            VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: 18) { stats }
+                action
+            }
+        }
+    }
+}
+
+extension SummaryLayout where Action == EmptyView {
+    init(@ViewBuilder stats: () -> Stats) {
+        self.init(stats: stats) { EmptyView() }
+    }
+}
+
 struct LegendDot: View {
     let color: Color
     let label: String
@@ -190,6 +226,8 @@ struct PrimaryButtonStyle: ButtonStyle {
         var body: some View {
             configuration.label
                 .font(.system(size: 13, weight: .medium))
+                .lineLimit(1)
+                .fixedSize()
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
                 .foregroundStyle(Theme.onAccent)
@@ -212,6 +250,8 @@ struct PillModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.system(size: 13, weight: .medium))
+            .lineLimit(1)
+            .fixedSize()
             .padding(.horizontal, 14)
             .padding(.vertical, 7)
             .foregroundStyle(.primary)

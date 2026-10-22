@@ -87,12 +87,11 @@ struct DockerView: View {
         let total = Double(max(store.totalSize, 1))
         return Card(padding: 24) {
             VStack(alignment: .leading, spacing: 22) {
-                HStack(alignment: .top, spacing: 48) {
+                SummaryLayout {
                     Stat(label: "In use", value: store.totalSize.formattedBytes, large: true)
                     Stat(
                         label: "Reclaimable", value: store.totalReclaimable.formattedBytes,
                         caption: "volumes are never removed")
-                    Spacer()
                 }
                 VStack(alignment: .leading, spacing: 10) {
                     CapacityBar(

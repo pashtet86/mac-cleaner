@@ -106,7 +106,7 @@ struct InspectorView: View {
         let total = Double(max(current.size, 1))
         return Card(padding: 24) {
             VStack(alignment: .leading, spacing: 20) {
-                HStack(alignment: .top, spacing: 48) {
+                SummaryLayout {
                     // The selection figure appears only once something is selected.
                     if !store.selected.isEmpty {
                         Stat(
@@ -117,7 +117,7 @@ struct InspectorView: View {
                         label: current.name, value: current.size.formattedBytes,
                         caption: "\(current.children.count + current.smallCount) items inside",
                         large: store.selected.isEmpty)
-                    Spacer()
+                } action: {
                     Button("Clean Selected…") { isReviewing = true }
                         .buttonStyle(.primary)
                         .disabled(store.selected.isEmpty || store.phase != .ready)
@@ -150,7 +150,7 @@ struct InspectorView: View {
                     onOpen: { store.open($0) }
                 )
                 .id(ObjectIdentifier(current))
-                .frame(height: 460)
+                .frame(height: 340)
                 .padding(6)
                 Divider().overlay(Theme.hairline)
                 detail(store.focused ?? current, isFolderShown: store.focused == nil)
