@@ -32,7 +32,7 @@ struct SimulatorsView: View {
                     Card(padding: 0) {
                         if store.runtimes.isEmpty {
                             EmptyNote(
-                                symbol: "iphone.slash", title: store.hasLoaded ? "No runtimes" : "Loading…",
+                                symbol: "iphone.slash", title: store.hasLoaded ? "No runtimes" : "Loading",
                                 message: "Simulator runtimes downloaded through Xcode appear here.")
                         } else {
                             VStack(spacing: 0) {
@@ -123,8 +123,8 @@ struct SimulatorsView: View {
                         label: "Unavailable", value: store.unavailableBytes.formattedBytes,
                         caption: "\(store.unavailableDevices.count) orphaned devices")
                 } action: {
-                    Button("Clean Unavailable…") { confirmUnavailable = true }
-                        .buttonStyle(.primary)
+                    Button("Clean Unavailable Simulators") { confirmUnavailable = true }
+                        .buttonStyle(.clean)
                         .disabled(
                             store.unavailableDevices.isEmpty || store.busy.contains(SimulatorsStore.unavailableKey))
                 }

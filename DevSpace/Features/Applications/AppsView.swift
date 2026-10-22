@@ -47,7 +47,7 @@ struct AppsView: View {
                     let apps = store.visibleApps
                     if apps.isEmpty {
                         EmptyNote(
-                            symbol: section.symbol, title: store.hasLoaded ? "No apps found" : "Looking for apps…",
+                            symbol: section.symbol, title: store.hasLoaded ? "No apps found" : "Looking for apps",
                             message: "")
                     } else {
                         VStack(spacing: 0) {
@@ -97,13 +97,13 @@ struct AppsView: View {
             SummaryLayout {
                 Stat(
                     label: "Applications", value: store.totalBytes.formattedBytes,
-                    caption: "\(store.apps.count) apps" + (store.isMeasuring ? " · measuring…" : ""), large: true)
+                    caption: "\(store.apps.count) apps" + (store.isMeasuring ? " · measuring" : ""), large: true)
                 // Shown only when there is something unused to point at.
                 if !store.unusedApps.isEmpty {
                     Stat(
                         label: "Not used for 6 months", value: store.unusedBytes.formattedBytes,
                         caption: "\(store.unusedApps.count) apps",
-                        captionTint: Theme.sand)
+                        captionTint: Theme.sand, captionSymbol: "clock")
                 }
             }
         }
@@ -156,7 +156,7 @@ struct AppsView: View {
             if store.removing.contains(app.url) {
                 ProgressView().controlSize(.small).frame(width: 78)
             } else {
-                Button("Remove…") { pending = app }
+                Button("Remove") { pending = app }
                     .buttonStyle(.quiet)
                     .disabled(app.isSystem || running)
                     .help(
@@ -171,7 +171,8 @@ struct AppsView: View {
     }
 
     private func lastUsedText(_ app: AppEntry) -> String {
-        guard let date = app.lastUsed else { return "No record of use" }
-        return "Last used \(date.formatted(.relative(presentation: .named)))"
+        let used =
+            app.lastUsed.map { "Last used \($0.formatted(.relative(presentation: .named)))" } ?? "No record of use"
+        return [used, store.ownerDescription(app)].compactMap { $0 }.joined(separator: " · ")
     }
 }

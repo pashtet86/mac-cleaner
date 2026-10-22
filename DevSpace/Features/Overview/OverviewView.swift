@@ -19,6 +19,10 @@ struct OverviewView: View {
                     title: "Overview",
                     subtitle: "Developer disk cleaner · \(Host.current().localizedName ?? "This Mac")")
 
+                if Telemetry.shared.shouldAsk {
+                    TelemetryConsentCard().transition(.opacity)
+                }
+
                 if let volume { diskCard(volume) }
 
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 3), spacing: 16) {
@@ -141,7 +145,7 @@ struct OverviewView: View {
                     }
                     Stat(
                         label: section.title, value: value, caption: caption,
-                        captionTint: hasSafeBytes(section) ? Theme.sage : nil)
+                        captionTint: hasSafeBytes(section) ? Theme.cleanable : nil)
                 }
             }
             .hoverLift()
@@ -164,7 +168,7 @@ struct OverviewView: View {
     private func figures(for section: AppSection) -> (String, String) {
         switch section {
         case .simulators:
-            guard simulators.hasLoaded else { return ("—", "Loading…") }
+            guard simulators.hasLoaded else { return ("—", "Loading") }
             return (
                 (simulators.runtimesBytes + simulators.devicesBytes).formattedBytes,
                 "\(simulators.runtimes.count) runtimes · \(simulators.devices.count) devices"
@@ -175,12 +179,12 @@ struct OverviewView: View {
                 return (docker.totalSize.formattedBytes, "\(docker.totalReclaimable.formattedBytes) reclaimable")
             case .notRunning: return ("—", "Docker isn't running")
             case .notInstalled: return ("—", "Not installed")
-            case .unknown: return ("—", "Checking…")
+            case .unknown: return ("—", "Checking")
             }
         default:
             guard let rules = section.ruleSection else { return ("—", "") }
             if cleanup.phase == .idle || (cleanup.phase == .scanning && cleanup.scannedAt == nil) {
-                return ("—", "Scanning…")
+                return ("—", "Scanning")
             }
             return (
                 cleanup.total(in: rules).formattedBytes, "\(cleanup.safeTotal(in: rules).formattedBytes) safe to clean"
@@ -200,10 +204,10 @@ private struct SafeToCleanPanel: View {
                 Image(systemName: "sparkles").font(.system(size: 11, weight: .semibold))
                 Text("SAFE TO CLEAN").font(.eyebrow).tracking(1.1)
             }
-            .foregroundStyle(Theme.sage)
+            .foregroundStyle(Theme.cleanable)
             Text(bytes.formattedBytes)
                 .font(.figure)
-                .foregroundStyle(Theme.sage)
+                .foregroundStyle(Theme.cleanable)
                 .contentTransition(.numericText())
             Text(
                 sections == 0
@@ -215,9 +219,9 @@ private struct SafeToCleanPanel: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 16)
-        .background(Theme.sage.opacity(0.09), in: .rect(cornerRadius: 12, style: .continuous))
+        .background(Theme.cleanable.opacity(0.09), in: .rect(cornerRadius: 12, style: .continuous))
         .overlay {
-            RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(Theme.sage.opacity(0.22))
+            RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(Theme.cleanable.opacity(0.22))
         }
     }
 }

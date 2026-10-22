@@ -93,7 +93,7 @@ struct CleanupReviewSheet: View {
                     dismiss()
                     Task { await store.cleanSelected(in: section) }
                 }
-                .buttonStyle(.primary)
+                .buttonStyle(CleanButtonStyle(breathes: false))
                 .keyboardShortcut(.defaultAction)
                 .disabled(selected.isEmpty)
             }

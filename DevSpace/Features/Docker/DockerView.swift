@@ -27,7 +27,7 @@ struct DockerView: View {
 
                 switch store.state {
                 case .unknown:
-                    Card { EmptyNote(symbol: "shippingbox", title: "Checking Docker…", message: "") }
+                    Card { EmptyNote(symbol: "shippingbox", title: "Checking Docker", message: "") }
                 case .notInstalled:
                     Card {
                         EmptyNote(
@@ -131,7 +131,7 @@ struct DockerView: View {
                             if store.busy.contains(action) {
                                 ProgressView().controlSize(.small).frame(width: 70)
                             } else {
-                                Button("Clean…") { pending = action }
+                                Button("Clean") { pending = action }
                                     .buttonStyle(.quiet)
                             }
                         }

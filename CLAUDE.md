@@ -34,6 +34,9 @@ gitignored — never copy their contents into tracked files.
 - `Core/ThermalSensors` uses private IOKit HID API via `dlsym`: keep every symbol optional and keep the
   `IOHIDEventSystemClient` alive as long as its services (released client → reads hang).
 
+- Telemetry (`Core/Telemetry`, `telemetry/`) is opt-in and anonymous. Never add fields with paths, file names,
+  host or user names; the Worker's strict Zod schema must reject anything not listed.
+
 ## Workflow
 
 - Conventional Commits (enforced by `.githooks/commit-msg`). Commit only when asked.

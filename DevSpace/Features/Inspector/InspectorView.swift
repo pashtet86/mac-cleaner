@@ -18,7 +18,7 @@ struct InspectorView: View {
                         Button {
                             store.chooseRoot()
                         } label: {
-                            Label("Choose Folder…", systemImage: "folder")
+                            Label("Choose Folder", systemImage: "folder")
                         }
                         .buttonStyle(.quiet)
                         .disabled(store.isScanning)
@@ -118,8 +118,8 @@ struct InspectorView: View {
                         caption: "\(current.children.count + current.smallCount) items inside",
                         large: store.selected.isEmpty)
                 } action: {
-                    Button("Clean Selected…") { isReviewing = true }
-                        .buttonStyle(.primary)
+                    Button("Clean Selected") { isReviewing = true }
+                        .buttonStyle(.clean)
                         .disabled(store.selected.isEmpty || store.phase != .ready)
                 }
                 VStack(alignment: .leading, spacing: 10) {
@@ -451,7 +451,7 @@ private struct InspectorReviewSheet: View {
                     dismiss()
                     Task { await store.trashSelected() }
                 }
-                .buttonStyle(.primary)
+                .buttonStyle(CleanButtonStyle(breathes: false))
                 .keyboardShortcut(.defaultAction)
                 .disabled(nodes.isEmpty)
             }

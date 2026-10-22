@@ -1,0 +1,30 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "devspace-telemetry",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-10-22",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "devspace-telemetry",
+			// From `npx wrangler d1 create devspace-telemetry`. Not a secret — access needs your Cloudflare login.
+			"database_id": "91b4c507-78c2-48da-abdc-dcf9bba489f2",
+			"migrations_dir": "migrations"
+		}
+	],
+	// STATS_TOKEN is a secret: `npx wrangler secret put STATS_TOKEN`. Never put it here.
+	"observability": {
+		"enabled": true,
+		"logs": {
+			"enabled": true,
+			"head_sampling_rate": 1
+		},
+		"traces": {
+			"enabled": true,
+			"head_sampling_rate": 0.05
+		}
+	}
+}

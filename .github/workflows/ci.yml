@@ -39,6 +39,26 @@ jobs:
       - name: Release build
         run: make release
 
+  telemetry:
+    name: Statistics worker
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: telemetry
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: telemetry/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npm test
+
   commits:
     name: Conventional commit titles
     if: github.event_name == 'pull_request'

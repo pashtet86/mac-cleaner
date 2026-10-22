@@ -102,6 +102,9 @@ final class CleanupStore {
         phase = .cleaning
         let report = await SafeTrash.trash(targets)
         lastReport = (section, report)
+        if let appSection = AppSection(rawValue: section.rawValue) {
+            Telemetry.shared.cleaned(report.movedBytes, in: appSection)
+        }
         phase = .ready
         await scan()
     }

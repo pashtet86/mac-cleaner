@@ -199,6 +199,7 @@ final class FilesStore {
         }
         selection.subtract(moved)
         lastReport = report
+        Telemetry.shared.cleaned(report.movedBytes, in: mode == .large ? .largeFiles : .duplicates)
         phase = .ready
     }
 

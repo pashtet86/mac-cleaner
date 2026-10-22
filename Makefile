@@ -6,7 +6,7 @@ SOURCES  := DevSpace DevSpaceTests
 XCODEBUILD := xcodebuild -project $(PROJECT) -scheme $(SCHEME) -destination 'platform=macOS' -derivedDataPath $(DERIVED)
 
 .DEFAULT_GOAL := help
-.PHONY: help setup build release test lint format check run snapshots dmg clean
+.PHONY: help setup build release test lint format check run snapshots dmg telemetry-check clean
 
 help: ## Show this help
 	@grep -E '^[a-z-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "} {printf "  \033[1m%-10s\033[0m %s\n", $$1, $$2}'
@@ -46,6 +46,9 @@ snapshots: build ## Render every screen in light and dark mode to build/snapshot
 
 dmg: ## Universal Release build packaged as build/dist/DevSpace-<version>.dmg
 	@scripts/make_dmg.sh
+
+telemetry-check: ## Type-check and test the statistics Worker
+	@cd telemetry && npm ci --no-audit --no-fund && npm run typecheck && npm test
 
 clean: ## Remove build output
 	@rm -rf build

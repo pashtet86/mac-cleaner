@@ -24,5 +24,9 @@ struct DevSpaceApp: App {
         }
         .defaultSize(width: 1120, height: 780)
         .windowToolbarStyle(.unified)
+
+        Settings {
+            SettingsView()
+        }
     }
 }

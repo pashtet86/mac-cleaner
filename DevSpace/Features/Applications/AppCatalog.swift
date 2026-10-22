@@ -8,6 +8,8 @@ nonisolated struct AppEntry: Identifiable, Hashable, Sendable {
     let version: String?
     let lastUsed: Date?
     let isFromAppStore: Bool
+    /// Account that owns the bundle, i.e. who installed it ("root" for App Store and installer packages).
+    var owner: String? = nil
     var size: Int64?
 
     var id: URL { url }
@@ -68,8 +70,29 @@ nonisolated enum AppCatalog {
             bundleID: info?["CFBundleIdentifier"] as? String,
             version: info?["CFBundleShortVersionString"] as? String,
             lastUsed: lastUsedDate(of: url),
-            isFromAppStore: FileManager.default.fileExists(atPath: url.appending(path: "Contents/_MASReceipt").path)
+            isFromAppStore: FileManager.default.fileExists(atPath: url.appending(path: "Contents/_MASReceipt").path),
+            owner: (try? FileManager.default.attributesOfItem(atPath: url.path))?[.ownerAccountName] as? String
         )
+    }
+
+    /// Login accounts on this Mac: regular UIDs (501+) with a real shell, so service accounts don't count.
+    static func humanAccounts() -> [String] {
+        var names: [String] = []
+        setpwent()
+        defer { endpwent() }
+        while let entry = getpwent() {
+            let shell = String(cString: entry.pointee.pw_shell)
+            guard entry.pointee.pw_uid >= 501, !shell.hasSuffix("false"), !shell.hasSuffix("nologin") else { continue }
+            names.append(String(cString: entry.pointee.pw_name))
+        }
+        return names
+    }
+
+    /// "Anna Smith" from the account's full-name field, or the account name itself.
+    static func fullName(of account: String) -> String {
+        guard let entry = getpwnam(account), let gecos = entry.pointee.pw_gecos else { return account }
+        let name = String(cString: gecos).split(separator: ",").first.map(String.init) ?? ""
+        return name.isEmpty ? account : name
     }
 
     /// When the app was last opened, as recorded by Spotlight. Nil if never or Spotlight is off.

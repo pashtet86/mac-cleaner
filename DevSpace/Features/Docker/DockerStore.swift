@@ -48,8 +48,10 @@ final class DockerStore {
     func perform(_ action: DockerAction) async {
         busy.insert(action)
         defer { busy.remove(action) }
+        let estimate = reclaimable(for: action) ?? 0
         do {
             try await Docker.perform(action)
+            Telemetry.shared.cleaned(estimate, in: .docker)
         } catch {
             errorMessage = error.localizedDescription
         }

@@ -19,4 +19,8 @@ and the project uses [Semantic Versioning](https://semver.org/). Entries are der
 - Trash-only deletion with mandatory preview; scoped path policies.
 - App icon; renamed to DevSpace.
 - `make dmg`: universal DMG, ad-hoc or Developer ID signed and notarized.
+- Opt-in anonymous statistics: Cloudflare Worker + D1 in `telemetry/`, consent on Overview, toggle in Settings; off
+  unless the build sets `TELEMETRY_ENDPOINT`.
+- Applications: installed apps with size, last use, owner on multi-user Macs, and removal.
+- Fan speed and disk fill in the sidebar.
 - Unit tests, git hooks, CI.

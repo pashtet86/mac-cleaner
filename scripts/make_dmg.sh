@@ -2,6 +2,7 @@
 # Builds a universal Release DevSpace.app and packages it as a drag-to-Applications DMG.
 #
 #   scripts/make_dmg.sh                       # ad-hoc signed: testers allow it once in System Settings
+#   TELEMETRY_ENDPOINT=https://… scripts/make_dmg.sh   # adds opt-in anonymous statistics (see telemetry/)
 #   SIGN_IDENTITY="Developer ID Application: Name (TEAMID)" \
 #   NOTARY_PROFILE=devspace-notary \
 #   scripts/make_dmg.sh                       # signed + notarized: opens without warnings
@@ -19,7 +20,7 @@ STAGING="$OUT/staging"
 echo "› Building universal Release app"
 xcodebuild -project DevSpace.xcodeproj -scheme DevSpace -configuration Release \
     -destination 'generic/platform=macOS' -derivedDataPath "$DERIVED" \
-    ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO -quiet build
+    ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO TELEMETRY_ENDPOINT="${TELEMETRY_ENDPOINT:-}" -quiet build
 
 APP="$DERIVED/Build/Products/Release/DevSpace.app"
 VERSION=$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$APP/Contents/Info.plist")

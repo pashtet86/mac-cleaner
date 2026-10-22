@@ -82,8 +82,9 @@ struct Stat: View {
     let value: String
     var caption: String? = nil
     var large = false
-    /// Highlights the caption (e.g. "4 GB safe to clean") in this color with a check mark.
+    /// Highlights the caption (e.g. "4 GB safe to clean") in this color with `captionSymbol`.
     var captionTint: Color? = nil
+    var captionSymbol = "sparkles"
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -96,7 +97,7 @@ struct Stat: View {
                 .contentTransition(.numericText())
             if let caption {
                 if let captionTint {
-                    Label(caption, systemImage: "checkmark.circle.fill")
+                    Label(caption, systemImage: captionSymbol)
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(captionTint)
                         .labelStyle(.titleAndIcon)
@@ -304,6 +305,60 @@ struct IconButtonStyle: ButtonStyle {
                 .onHover { hovering in withAnimation(.hover) { isHovered = hovering } }
         }
     }
+}
+
+/// The button that actually cleans. Green, slightly larger than other buttons, with a slow
+/// "breathing" glow while it's enabled and idle. Respects Reduce Motion.
+struct CleanButtonStyle: ButtonStyle {
+    /// Off for confirmation buttons in sheets, where motion would distract.
+    var breathes = true
+
+    func makeBody(configuration: Configuration) -> some View {
+        StyledButton(configuration: configuration, breathes: breathes)
+    }
+
+    private struct StyledButton: View {
+        let configuration: Configuration
+        let breathes: Bool
+        @Environment(\.isEnabled) private var isEnabled
+        @Environment(\.accessibilityReduceMotion) private var reduceMotion
+        @State private var isHovered = false
+        @State private var glow = false
+
+        private var animates: Bool { breathes && isEnabled && !reduceMotion }
+
+        var body: some View {
+            configuration.label
+                .font(.system(size: 14, weight: .semibold))
+                .lineLimit(1)
+                .fixedSize()
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .foregroundStyle(isEnabled ? AnyShapeStyle(.white) : AnyShapeStyle(.secondary))
+                .background(
+                    isEnabled ? AnyShapeStyle(Theme.action) : AnyShapeStyle(Color.primary.opacity(0.1)), in: Capsule()
+                )
+                .overlay { Capsule().fill(.white.opacity(isHovered && isEnabled ? 0.12 : 0)) }
+                .shadow(
+                    color: Theme.action.opacity(isEnabled ? (glow ? 0.45 : (isHovered ? 0.3 : 0.12)) : 0),
+                    radius: glow ? 14 : 6, y: 2
+                )
+                .scaleEffect(configuration.isPressed ? 0.97 : 1)
+                .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+                .onHover { hovering in withAnimation(.hover) { isHovered = hovering } }
+                .onChange(of: animates, initial: true) { _, on in
+                    if on {
+                        withAnimation(.easeInOut(duration: 1.8).repeatForever(autoreverses: true)) { glow = true }
+                    } else {
+                        withAnimation(.easeOut(duration: 0.2)) { glow = false }
+                    }
+                }
+        }
+    }
+}
+
+extension ButtonStyle where Self == CleanButtonStyle {
+    static var clean: CleanButtonStyle { CleanButtonStyle() }
 }
 
 extension ButtonStyle where Self == PrimaryButtonStyle {

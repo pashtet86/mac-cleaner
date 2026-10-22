@@ -21,7 +21,7 @@ nonisolated enum Safety: Int, CaseIterable, Sendable {
 extension Safety {
     var tone: Color {
         switch self {
-        case .rebuildable: Theme.sage
+        case .rebuildable: Theme.cleanable
         case .likelySafe: Theme.sand
         case .review: Theme.clay
         case .personal: Theme.slate

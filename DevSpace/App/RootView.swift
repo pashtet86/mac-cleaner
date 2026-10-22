@@ -133,7 +133,7 @@ struct RootView: View {
                             availability.visible(AppSection.developer, keeping: selection), id: \.self, content: row)
                         if availability.isDetecting {
                             Label {
-                                Text("Detecting…").foregroundStyle(.tertiary)
+                                Text("Detecting").foregroundStyle(.tertiary)
                             } icon: {
                                 ProgressView().controlSize(.mini)
                             }
@@ -171,7 +171,10 @@ struct RootView: View {
             }
         }
         .tint(Theme.accent)
-        .task { await availability.detectAll() }
+        .task {
+            Telemetry.shared.appOpened()
+            await availability.detectAll()
+        }
         #if DEBUG
         .task { await DebugSnapshot.run(select: { selection = $0 }, files: files, inspector: inspector) }
         #endif

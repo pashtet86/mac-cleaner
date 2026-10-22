@@ -41,8 +41,8 @@ struct LargeFilesView: View {
                         caption: "\(store.largeFiles.count) over \(store.minimumSize.label)",
                         large: store.selection.isEmpty)
                 } action: {
-                    Button("Clean Selected…") { isReviewing = true }
-                        .buttonStyle(.primary)
+                    Button("Clean Selected") { isReviewing = true }
+                        .buttonStyle(.clean)
                         .disabled(store.selection.isEmpty || store.phase != .ready)
                 }
                 if !kinds.isEmpty {

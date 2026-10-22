@@ -60,22 +60,25 @@ final class SimulatorsStore {
     }
 
     func delete(_ runtime: SimRuntime) async {
-        await perform(runtime.id) { try await Simctl.deleteRuntime(runtime.identifier) }
+        await perform(runtime.id, freeing: runtime.sizeBytes ?? 0) {
+            try await Simctl.deleteRuntime(runtime.identifier)
+        }
     }
 
     func delete(_ device: SimDevice) async {
-        await perform(device.id) { try await Simctl.deleteDevice(device.udid) }
+        await perform(device.id, freeing: device.dataPathSize ?? 0) { try await Simctl.deleteDevice(device.udid) }
     }
 
     func deleteUnavailable() async {
-        await perform(Self.unavailableKey) { try await Simctl.deleteUnavailableDevices() }
+        await perform(Self.unavailableKey, freeing: unavailableBytes) { try await Simctl.deleteUnavailableDevices() }
     }
 
-    private func perform(_ key: String, _ operation: () async throws -> Void) async {
+    private func perform(_ key: String, freeing bytes: Int64, _ operation: () async throws -> Void) async {
         busy.insert(key)
         defer { busy.remove(key) }
         do {
             try await operation()
+            Telemetry.shared.cleaned(bytes, in: .simulators)
         } catch {
             errorMessage = error.localizedDescription
         }

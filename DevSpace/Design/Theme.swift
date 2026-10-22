@@ -19,13 +19,18 @@ enum Theme {
 
     // Risk tones (status — never reused as series colors). Validated as a set for
     // color-vision separation: emerald, amber, raspberry, blue slate.
+    /// Green means done or running: results, live status, and the button that cleans.
     static let sage = Color(light: 0x2A9A5E, dark: 0x34A874)
+    /// Blue means "can be cleaned safely" — a possibility, not a result.
+    static let cleanable = Color(light: 0x1E88D6, dark: 0x3A9BE8)
+    /// Fill of the Clean button (white text stays readable on it).
+    static let action = Color(light: 0x1F8A52, dark: 0x2E9E63)
     static let sand = Color(light: 0xC29512, dark: 0xBC8A1E)
     static let clay = Color(light: 0xC8445E, dark: 0xDD5C7C)
     /// "Something to clean here" dot in the sidebar and on Overview cards.
     static let attention = Color(light: 0xE5484D, dark: 0xFF6369)
     /// The user's own files in the Files Inspector.
-    static let slate = Color(light: 0x5470B0, dark: 0x6A84C8)
+    static let slate = Color(light: 0x6E62C4, dark: 0x8A80DA)
 
     // Surfaces.
     static let canvas = Color(light: 0xF6F5F2, dark: 0x16171A)

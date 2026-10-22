@@ -97,6 +97,18 @@ SIGN_IDENTITY="Developer ID Application: <Name> (<TEAMID>)" NOTARY_PROFILE=devsp
 
 `store-credentials` asks for an app-specific password and keeps it in your keychain; never put it in the repository.
 
+## Anonymous statistics (optional)
+
+Off by default — a plain build has no endpoint and never touches the network. To learn how many people install
+and use DevSpace, deploy the Cloudflare Worker in [`telemetry/`](telemetry/README.md) and build with its URL:
+
+```sh
+TELEMETRY_ENDPOINT=https://devspace-telemetry.<account>.workers.dev make dmg
+```
+
+Users are asked once on first launch and can change their mind in Settings (⌘,). Only a random install ID, app and
+macOS versions, architecture and bytes cleaned per section are sent.
+
 ## Project structure
 
 ```

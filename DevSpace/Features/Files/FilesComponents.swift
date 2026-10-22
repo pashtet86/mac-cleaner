@@ -108,7 +108,7 @@ struct FileScanScope: View {
                     Button {
                         store.addRoot()
                     } label: {
-                        Label("Add Folder…", systemImage: "plus")
+                        Label("Add Folder", systemImage: "plus")
                     }
                     .buttonStyle(.quiet)
                     if store.roots != [FileManager.default.homeDirectoryForCurrentUser] {
@@ -286,7 +286,7 @@ struct FilesReviewSheet: View {
                     dismiss()
                     Task { await store.trashSelected() }
                 }
-                .buttonStyle(.primary)
+                .buttonStyle(CleanButtonStyle(breathes: false))
                 .keyboardShortcut(.defaultAction)
                 .disabled(entries.isEmpty || !unsafeGroups.isEmpty)
             }

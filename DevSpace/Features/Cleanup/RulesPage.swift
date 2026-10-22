@@ -40,7 +40,7 @@ struct RulesPage: View {
                     Card {
                         VStack(spacing: 12) {
                             ProgressView().controlSize(.small)
-                            Text("Looking for \(section.title.lowercased()) data…")
+                            Text("Looking for \(section.title.lowercased()) data")
                                 .font(.callout).foregroundStyle(.secondary)
                         }
                         .frame(maxWidth: .infinity)
@@ -111,12 +111,12 @@ struct RulesPage: View {
                         if store.isBusy {
                             HStack(spacing: 8) {
                                 ProgressView().controlSize(.small)
-                                Text(store.phase == .scanning ? "Scanning…" : "Moving to Trash…")
+                                Text(store.phase == .scanning ? "Scanning" : "Moving to Trash")
                                     .font(.callout).foregroundStyle(.secondary)
                             }
                         }
-                        Button("Clean Selected…") { isReviewing = true }
-                            .buttonStyle(.primary)
+                        Button("Clean Selected") { isReviewing = true }
+                            .buttonStyle(.clean)
                             .disabled(store.selectedItems(in: ruleSection).isEmpty || store.phase != .ready)
                     }
                 }

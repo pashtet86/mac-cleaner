@@ -21,6 +21,9 @@ You will get an acknowledgement within a few days. Fixes ship as a patch release
 - Deletion only through `SafeTrash` → Trash, after an explicit preview.
 - Path allowlist plus deny list, checked again at deletion time after resolving symlinks.
 - External tools only with argument arrays and a fixed set of operations; identifiers validated.
-- No network access, no telemetry.
+- No network access by default. Builds made with a `TELEMETRY_ENDPOINT` can send opt-in, anonymous statistics
+  (random install ID, versions, architecture, bytes cleaned per section) to our own Worker in `telemetry/` — never
+  file names, paths, IP addresses, or the Mac's or user's name. The user decides on first launch and can change it in
+  Settings.
 - Future privileged operations (root) go through a separate `SMAppService` helper with an XPC allowlist and
   code-signature checks on the client — never by running scripts with `sudo`.

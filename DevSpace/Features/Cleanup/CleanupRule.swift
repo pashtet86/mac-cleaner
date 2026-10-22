@@ -16,7 +16,7 @@ nonisolated enum Risk: String, Codable, Sendable, CaseIterable {
 extension Risk {
     var tone: Color {
         switch self {
-        case .safe: Theme.sage
+        case .safe: Theme.cleanable
         case .probablySafe: Theme.sand
         case .review: Theme.clay
         }

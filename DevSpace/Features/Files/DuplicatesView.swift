@@ -36,8 +36,8 @@ struct DuplicatesView: View {
                         caption: "\(copies) copies in \(store.duplicateGroups.count) groups",
                         large: store.selection.isEmpty)
                 } action: {
-                    Button("Clean Selected…") { isReviewing = true }
-                        .buttonStyle(.primary)
+                    Button("Clean Selected") { isReviewing = true }
+                        .buttonStyle(.clean)
                         .disabled(store.selection.isEmpty || store.phase != .ready)
                 }
                 ScanFootnote(store: store)

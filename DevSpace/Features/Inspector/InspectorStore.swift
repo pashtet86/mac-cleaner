@@ -165,6 +165,7 @@ final class InspectorStore {
         if path.isEmpty, let tree { path = [tree] }
         selected = [:]
         lastReport = report
+        Telemetry.shared.cleaned(report.movedBytes, in: .inspector)
         phase = .ready
     }
 

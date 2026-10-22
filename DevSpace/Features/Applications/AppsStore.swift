@@ -18,6 +18,8 @@ final class AppsStore {
     private(set) var isLoading = false
     private(set) var hasLoaded = false
     private(set) var removing: Set<URL> = []
+    /// Owners are only worth showing on a Mac with several login accounts.
+    private(set) var showsOwners = false
     var sort: Sort = .size
     var query = ""
     var errorMessage: String?
@@ -47,6 +49,16 @@ final class AppsStore {
         }
     }
 
+    /// "you", "Anna Smith" or "all users" for root-owned installs.
+    func ownerDescription(_ app: AppEntry) -> String? {
+        guard showsOwners, let owner = app.owner else { return nil }
+        switch owner {
+        case NSUserName(): return "Installed by you"
+        case "root": return "Available to all users"
+        default: return "Installed by \(AppCatalog.fullName(of: owner))"
+        }
+    }
+
     func refreshIfNeeded() async {
         if !hasLoaded { await refresh() }
     }
@@ -58,7 +70,9 @@ final class AppsStore {
             isLoading = false
             hasLoaded = true
         }
-        apps = await Task.detached(priority: .userInitiated) { AppCatalog.list() }.value
+        (apps, showsOwners) = await Task.detached(priority: .userInitiated) {
+            (AppCatalog.list(), Set(AppCatalog.humanAccounts()).count > 1)
+        }.value
         // Sizes stream in: big bundles like Xcode take seconds each.
         await withTaskGroup(of: (URL, Int64).self) { group in
             var pending = apps.map(\.url).makeIterator()
@@ -96,6 +110,7 @@ final class AppsStore {
         }
         if !FileManager.default.fileExists(atPath: app.url.path) {
             apps.removeAll { $0.url == app.url }
+            Telemetry.shared.cleaned(app.size ?? 0, in: .applications)
         }
     }
 

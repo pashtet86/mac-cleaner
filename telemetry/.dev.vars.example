@@ -1,0 +1,2 @@
+# Copy to .dev.vars for local development (gitignored). Production: npx wrangler secret put STATS_TOKEN
+STATS_TOKEN=generate-with-openssl-rand-hex-32
