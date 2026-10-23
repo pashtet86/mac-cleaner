@@ -1,4 +1,4 @@
-# DevSpace
+# Disk Cleaner
 
 A native macOS app that frees disk space safely — built for developers whose Macs fill up with Xcode
 build products, simulators, SDKs, package caches and Docker images.
@@ -54,13 +54,13 @@ macOS asks for Desktop, Documents and Downloads access the first time a scan rea
 ## Getting started
 
 ```sh
-git clone <repo-url> devspace
-cd devspace
+git clone <repo-url> macdiskcleaner
+cd macdiskcleaner
 make setup   # installs git hooks
 make run     # builds and launches the Debug app
 ```
 
-Or open `DevSpace.xcodeproj` in Xcode and press ⌘R.
+Or open `MacDiskCleaner.xcodeproj` in Xcode and press ⌘R.
 
 | Command | |
 |---|---|
@@ -73,26 +73,27 @@ Or open `DevSpace.xcodeproj` in Xcode and press ⌘R.
 ## Sharing a test build
 
 ```sh
-make dmg   # → build/dist/DevSpace-<version>.dmg, universal (Apple Silicon + Intel)
+make dmg   # → build/dist/DiskCleaner-<version>.dmg, universal (Apple Silicon + Intel)
 ```
 
-Testers need macOS 26 or later. They open the DMG and drag **DevSpace** onto **Applications**.
+Testers need macOS 26 or later. They open the DMG and drag **Disk Cleaner** onto **Applications**.
 
 **Ad-hoc build (default).** It is not signed with a Developer ID, so Gatekeeper blocks the first launch. The tester
 allows it once:
 
-1. Open DevSpace from Applications. macOS says it cannot verify the developer — click **Done**.
-2. Open System Settings → Privacy & Security, scroll to *Security*, click **Open Anyway** next to DevSpace, and
+1. Open Disk Cleaner from Applications. macOS says it cannot verify the developer — click **Done**.
+2. Open System Settings → Privacy & Security, scroll to *Security*, click **Open Anyway** next to Disk Cleaner, and
    confirm with your password.
 
 Share the SHA-256 printed by `make dmg` so the tester can check the download with `shasum -a 256 <file>`.
 
-**Signed and notarized build.** With a *Developer ID Application* certificate (paid Apple Developer Program), the app
-opens without warnings:
+**Signed and notarized build.** Release builds are signed with the team's *Developer ID Application* certificate.
+Store notarization credentials once (it asks for an app-specific password from account.apple.com and keeps it in
+the keychain), then build:
 
 ```sh
-xcrun notarytool store-credentials devspace-notary --apple-id <apple-id> --team-id <TEAMID>   # once
-SIGN_IDENTITY="Developer ID Application: <Name> (<TEAMID>)" NOTARY_PROFILE=devspace-notary make dmg
+xcrun notarytool store-credentials macdiskcleaner-notary --apple-id <apple-id> --team-id <TEAMID>   # once
+TELEMETRY_ENDPOINT=https://… make dmg-signed
 ```
 
 `store-credentials` asks for an app-specific password and keeps it in your keychain; never put it in the repository.
@@ -100,7 +101,7 @@ SIGN_IDENTITY="Developer ID Application: <Name> (<TEAMID>)" NOTARY_PROFILE=devsp
 ## Anonymous statistics (optional)
 
 Off by default — a plain build has no endpoint and never touches the network. To learn how many people install
-and use DevSpace, deploy the Cloudflare Worker in [`telemetry/`](telemetry/README.md) and build with its URL:
+and use Disk Cleaner, deploy the Cloudflare Worker in [`telemetry/`](telemetry/README.md) and build with its URL:
 
 ```sh
 TELEMETRY_ENDPOINT=https://devspace-telemetry.<account>.workers.dev make dmg
@@ -112,7 +113,7 @@ macOS versions, architecture and bytes cleaned per section are sent.
 ## Project structure
 
 ```
-DevSpace/
+MacDiskCleaner/
   App/            Entry point, navigation (AppSection), debug snapshots
   Design/         Theme tokens (colors, type), shared components
   Core/           ProcessRunner, DiskUsage, SafeTrash — UI-free, nonisolated
@@ -124,7 +125,7 @@ DevSpace/
     Overview/
   Resources/
     cleanup_rules.json   Every cache rule: paths, risk, description, apps to quit
-DevSpaceTests/       Unit tests
+MacDiskCleanerTests/       Unit tests
 scripts/                 Read-only shell audits the app grew out of
 ```
 
@@ -132,7 +133,7 @@ Folders are synchronized with the Xcode project: add a file on disk and it is pa
 
 ## Adding a cleanup rule
 
-Most contributions are a new entry in `DevSpace/Resources/cleanup_rules.json`. See
+Most contributions are a new entry in `MacDiskCleaner/Resources/cleanup_rules.json`. See
 [CONTRIBUTING.md](CONTRIBUTING.md#adding-a-cleanup-rule) for the fields and the safety checklist.
 
 ## Contributing

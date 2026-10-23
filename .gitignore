@@ -14,3 +14,6 @@ xcuserdata/
 # Local, machine-specific notes (may contain personal audit data)
 CLAUDE.local.md
 .claude/settings.local.json
+
+# Browser automation output
+.playwright-mcp/

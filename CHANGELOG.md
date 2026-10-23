@@ -17,7 +17,7 @@ and the project uses [Semantic Versioning](https://semver.org/). Entries are der
 - Large Files: size thresholds and file-kind breakdown.
 - Duplicates: sampled + SHA-256 detection, hard links counted once, at least one copy always kept.
 - Trash-only deletion with mandatory preview; scoped path policies.
-- App icon; renamed to DevSpace.
+- App icon; renamed to Disk Cleaner.
 - `make dmg`: universal DMG, ad-hoc or Developer ID signed and notarized.
 - Opt-in anonymous statistics: Cloudflare Worker + D1 in `telemetry/`, consent on Overview, toggle in Settings; off
   unless the build sets `TELEMETRY_ENDPOINT`.

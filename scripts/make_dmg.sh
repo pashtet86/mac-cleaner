@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# Builds a universal Release DevSpace.app and packages it as a drag-to-Applications DMG.
+# Builds a universal Release "Disk Cleaner.app" and packages it as a drag-to-Applications DMG.
 #
 #   scripts/make_dmg.sh                       # ad-hoc signed: testers allow it once in System Settings
 #   TELEMETRY_ENDPOINT=https://… scripts/make_dmg.sh   # adds opt-in anonymous statistics (see telemetry/)
 #   SIGN_IDENTITY="Developer ID Application: Name (TEAMID)" \
-#   NOTARY_PROFILE=devspace-notary \
+#   NOTARY_PROFILE=macdiskcleaner-notary \
 #   scripts/make_dmg.sh                       # signed + notarized: opens without warnings
 #
 # NOTARY_PROFILE is a notarytool keychain profile, created once with
-#   xcrun notarytool store-credentials devspace-notary --apple-id <id> --team-id <TEAMID>
+#   xcrun notarytool store-credentials macdiskcleaner-notary --apple-id <id> --team-id <TEAMID>
 # (it prompts for an app-specific password and keeps it in the keychain — never in this repo).
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -18,13 +18,14 @@ OUT=build/dist
 STAGING="$OUT/staging"
 
 echo "› Building universal Release app"
-xcodebuild -project DevSpace.xcodeproj -scheme DevSpace -configuration Release \
+xcodebuild -project MacDiskCleaner.xcodeproj -scheme MacDiskCleaner -configuration Release \
     -destination 'generic/platform=macOS' -derivedDataPath "$DERIVED" \
-    ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO TELEMETRY_ENDPOINT="${TELEMETRY_ENDPOINT:-}" -quiet build
+    ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO TELEMETRY_ENDPOINT="${TELEMETRY_ENDPOINT:-}" \
+    CODE_SIGN_IDENTITY="${SIGN_IDENTITY:--}" OTHER_CODE_SIGN_FLAGS="${SIGN_IDENTITY:+--timestamp}" -quiet build
 
-APP="$DERIVED/Build/Products/Release/DevSpace.app"
+APP="$DERIVED/Build/Products/Release/Disk Cleaner.app"
 VERSION=$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$APP/Contents/Info.plist")
-DMG="$OUT/DevSpace-$VERSION.dmg"
+DMG="$OUT/DiskCleaner-$VERSION.dmg"
 
 if [ -n "${SIGN_IDENTITY:-}" ]; then
     echo "› Signing with Developer ID"
@@ -35,10 +36,10 @@ codesign --verify --strict "$APP"
 echo "› Creating $DMG"
 rm -rf "$STAGING" "$DMG"
 mkdir -p "$STAGING"
-ditto "$APP" "$STAGING/DevSpace.app"
+ditto "$APP" "$STAGING/Disk Cleaner.app"
 ln -s /Applications "$STAGING/Applications"
 # hdiutil prints a deprecation notice on every run; keep everything else.
-hdiutil create -volname "DevSpace" -srcfolder "$STAGING" -fs HFS+ -format UDZO -ov "$DMG" 2>&1 | grep -v deprecated || true
+hdiutil create -volname "Disk Cleaner" -srcfolder "$STAGING" -fs HFS+ -format UDZO -ov "$DMG" 2>&1 | grep -v deprecated || true
 rm -rf "$STAGING"
 [ -f "$DMG" ] || { echo "✖ hdiutil did not create $DMG" >&2; exit 1; }
 
@@ -54,7 +55,7 @@ fi
 echo
 echo "✔ $DMG ($(du -h "$DMG" | cut -f1))"
 echo "  SHA-256: $(shasum -a 256 "$DMG" | cut -d' ' -f1)"
-echo "  Architectures: $(lipo -archs "$APP/Contents/MacOS/DevSpace")"
+echo "  Architectures: $(lipo -archs "$APP/Contents/MacOS/Disk Cleaner")"
 if [ -z "${SIGN_IDENTITY:-}" ]; then
     echo "  Ad-hoc signed — testers must allow it once (README → Sharing a test build)."
 fi

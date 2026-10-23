@@ -1,6 +1,6 @@
-# DevSpace statistics Worker
+# Disk Cleaner statistics Worker
 
-Receives opt-in, anonymous events from DevSpace and stores them in Cloudflare D1. No IP address, user agent, host
+Receives opt-in, anonymous events from Disk Cleaner and stores them in Cloudflare D1. No IP address, user agent, host
 name, user name or path is stored; the request schema rejects any field that isn't listed in `src/schema.ts`.
 
 | Endpoint | |

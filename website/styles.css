@@ -1,0 +1,542 @@
+/* Disk Cleaner — site styles. One system typeface (the page should feel like part of macOS);
+   colors are the app's own safety vocabulary. */
+
+:root {
+  --ink: #1b2230;
+  --ink-soft: #4a5466;
+  --ink-faint: #7b8494;
+  --page: #e9edf2;
+  --surface: #f7f9fb;
+  --line: #d3d9e1;
+
+  --rebuildable: #1e88d6;
+  --likely: #c29512;
+  --review: #c8445e;
+  --yours: #6e62c4;
+  --action: #1f8a52;
+  --action-ink: #ffffff;
+
+  --radius-small: 6px;
+  --radius: 14px;
+  --measure: 40rem;
+  --page-width: 68rem;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e6eaf0;
+    --ink-soft: #aab3c2;
+    --ink-faint: #7d8697;
+    --page: #13171d;
+    --surface: #1b2028;
+    --line: #2b323d;
+
+    --rebuildable: #3a9be8;
+    --likely: #bc8a1e;
+    --review: #dd5c7c;
+    --yours: #8a80da;
+    --action: #2e9e63;
+
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font: 400 1.0625rem/1.55 system-ui, -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif;
+  font-feature-settings: "tnum" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--rebuildable);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+code,
+.paths {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.86em;
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+}
+
+.skip:focus {
+  left: 1rem;
+  top: 1rem;
+  z-index: 10;
+  background: var(--surface);
+  padding: 0.5rem 0.75rem;
+}
+
+/* Layout: one left-aligned column; the disk map takes the full content width. */
+.bar,
+main,
+.foot {
+  width: min(var(--page-width), calc(100% - 2.5rem));
+  margin-inline: auto;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1.25rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 640;
+  text-decoration: none;
+}
+
+.brand img {
+  border-radius: 7px;
+}
+
+/* Type scale (ratio ~1.25) */
+h1,
+h2 {
+  margin: 0;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 6vw, 4.6rem);
+  line-height: 1.02;
+  font-weight: 700;
+  max-width: 14ch;
+}
+
+h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  line-height: 1.15;
+  font-weight: 650;
+}
+
+p {
+  margin: 0;
+}
+
+.intro {
+  padding-block: clamp(2.5rem, 8vw, 5.5rem) 2.5rem;
+}
+
+.lede {
+  margin-top: 1.5rem;
+  max-width: var(--measure);
+  font-size: 1.25rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.lede code {
+  color: var(--ink);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: 2rem;
+}
+
+.fine {
+  font-size: 0.875rem;
+  color: var(--ink-faint);
+}
+
+/* Buttons: green means "this does something" — the same rule as in the app. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.6rem 1.35rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--action);
+  color: var(--action-ink);
+  font: inherit;
+  font-weight: 620;
+  text-decoration: none;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.button:hover {
+  filter: brightness(1.08);
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.button--small {
+  min-height: 2.25rem;
+  padding: 0.35rem 1rem;
+  font-size: 0.9375rem;
+}
+
+/* ---- Disk map ---- */
+.demo {
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.demo__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.demo__title {
+  font-size: 1.0625rem;
+  font-weight: 640;
+  letter-spacing: 0;
+}
+
+.disk {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+}
+
+.disk__bar {
+  width: clamp(7rem, 18vw, 12rem);
+  height: 6px;
+  border-radius: 3px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.disk__used {
+  display: block;
+  height: 100%;
+  background: var(--ink-soft);
+  transition: width 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.disk__text strong {
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.map {
+  position: relative;
+  height: clamp(18rem, 42vw, 26rem);
+}
+
+.tile {
+  --tone: var(--yours);
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.1rem;
+  margin: 0;
+  padding: 0.55rem 0.65rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--tone) 45%, transparent);
+  border-radius: var(--radius-small);
+  background: color-mix(in srgb, var(--tone) 18%, var(--surface));
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    left 0.65s cubic-bezier(0.2, 0.8, 0.2, 1),
+    top 0.65s cubic-bezier(0.2, 0.8, 0.2, 1),
+    width 0.65s cubic-bezier(0.2, 0.8, 0.2, 1),
+    height 0.65s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.35s ease,
+    background-color 0.15s ease;
+}
+
+.tile:hover,
+.tile:focus-visible,
+.tile[aria-current="true"] {
+  background: color-mix(in srgb, var(--tone) 32%, var(--surface));
+}
+
+.tile[data-safety="rebuildable"] { --tone: var(--rebuildable); }
+.tile[data-safety="likely"] { --tone: var(--likely); }
+.tile[data-safety="review"] { --tone: var(--review); }
+.tile[data-safety="yours"] { --tone: var(--yours); }
+
+/* Your own files recede, so the eye lands on what can actually go. */
+.tile[data-safety="yours"] {
+  background: color-mix(in srgb, var(--tone) 9%, var(--surface));
+  border-color: color-mix(in srgb, var(--tone) 28%, transparent);
+}
+
+.tile[data-safety="yours"]:hover,
+.tile[data-safety="yours"]:focus-visible,
+.tile[data-safety="yours"][aria-current="true"] {
+  background: color-mix(in srgb, var(--tone) 18%, var(--surface));
+}
+
+.tile__name {
+  font-size: 0.875rem;
+  font-weight: 620;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+.tile__size {
+  font-size: 0.8125rem;
+  color: color-mix(in srgb, var(--tone) 70%, var(--ink));
+}
+
+.tile--compact .tile__name,
+.tile--compact .tile__size {
+  display: none;
+}
+
+.tile--gone {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.demo__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  margin-top: 1rem;
+}
+
+.detail {
+  flex: 1 1 22rem;
+  max-width: var(--measure);
+  min-height: 3em;
+  color: var(--ink-soft);
+}
+
+.detail strong {
+  color: var(--ink);
+}
+
+.button--clean {
+  min-width: 11rem;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  margin: 1rem 0 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.swatch {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 3px;
+}
+
+.swatch--rebuildable { background: var(--rebuildable); }
+.swatch--likely { background: var(--likely); }
+.swatch--review { background: var(--review); }
+.swatch--yours { background: var(--yours); }
+
+/* ---- Sections ---- */
+.finds,
+.safety {
+  padding-top: clamp(3.5rem, 8vw, 6rem);
+}
+
+.section-lede {
+  margin-top: 0.75rem;
+  max-width: var(--measure);
+  color: var(--ink-soft);
+}
+
+.finds__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: 0 2.5rem;
+  margin: 2rem 0 0;
+}
+
+.finds__list > div {
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.finds__list dt {
+  font-weight: 650;
+}
+
+.finds__list dd {
+  margin: 0.3rem 0 0;
+  color: var(--ink-soft);
+}
+
+.paths {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--ink-faint);
+  overflow-wrap: anywhere;
+}
+
+.safety__list {
+  display: grid;
+  gap: 1rem;
+  max-width: 46rem;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.safety__list li {
+  color: var(--ink-soft);
+}
+
+.safety__list strong {
+  color: var(--ink);
+}
+
+/* ---- Download ---- */
+.download {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.75rem;
+  align-items: start;
+  margin-top: clamp(3.5rem, 8vw, 6rem);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.download img {
+  border-radius: 24px;
+}
+
+.release {
+  margin: 0.5rem 0 1.25rem;
+  color: var(--ink-soft);
+}
+
+.download .fine {
+  margin-top: 1rem;
+  max-width: var(--measure);
+}
+
+.checksum {
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--ink-faint);
+  overflow-wrap: anywhere;
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  padding-block: 3rem;
+  font-size: 0.875rem;
+  color: var(--ink-faint);
+}
+
+/* ---- Privacy page ---- */
+.prose {
+  max-width: var(--measure);
+  padding-block: clamp(2.5rem, 6vw, 4rem);
+}
+
+.prose h1 {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  max-width: none;
+}
+
+.prose h2 {
+  margin-top: 2.5rem;
+  font-size: 1.35rem;
+}
+
+.prose p,
+.prose ul {
+  margin-top: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.prose li + li {
+  margin-top: 0.35rem;
+}
+
+@media (max-width: 40rem) {
+  .download {
+    grid-template-columns: 1fr;
+  }
+
+  .download img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .bar .button--small {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}

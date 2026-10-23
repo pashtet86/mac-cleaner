@@ -88,7 +88,7 @@ Installed by `make setup` from `.githooks/`:
 
 ## Adding a cleanup rule
 
-Add an object to `DevSpace/Resources/cleanup_rules.json`:
+Add an object to `MacDiskCleaner/Resources/cleanup_rules.json`:
 
 ```json
 {
@@ -124,6 +124,6 @@ Before opening the PR:
 
 ## Tests
 
-Swift Testing in `DevSpaceTests/`. Every bug fix gets a regression test; anything that decides **what may be
+Swift Testing in `MacDiskCleanerTests/`. Every bug fix gets a regression test; anything that decides **what may be
 deleted** (rules, `SafeTrash`, scanners) must be covered. File-system tests work in a temporary sandbox folder — never
 in the real home folder.

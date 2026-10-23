@@ -1,4 +1,4 @@
-# DevSpace — notes for Claude Code
+# Disk Cleaner — notes for Claude Code
 
 Native SwiftUI app (macOS 26+) that frees disk space safely. See README.md for features and CONTRIBUTING.md for
 conventions. Machine-specific notes (audit results, decisions about this Mac) live in `CLAUDE.local.md`, which is

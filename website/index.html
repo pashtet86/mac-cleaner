@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Disk Cleaner — free up space on a developer's Mac</title>
+  <meta name="description" content="Disk Cleaner finds Xcode builds, simulators, node_modules, Gradle and Docker caches on your Mac, shows what is safe to remove, and moves it to the Trash.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/app-icon.png">
+  <meta property="og:title" content="Disk Cleaner">
+  <meta property="og:description" content="See what fills a developer's Mac. Keep what matters, clean the rest safely.">
+  <meta property="og:image" content="https://machealthapps.com/assets/app-icon.png">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/treemap.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar">
+    <a class="brand" href="/">
+      <img src="/assets/app-icon.png" alt="" width="28" height="28">
+      Disk Cleaner
+    </a>
+    <a class="button button--small" href="#download">Download for Mac</a>
+  </header>
+
+  <main id="main">
+    <section class="intro">
+      <h1>Your Mac is full of things that rebuild themselves.</h1>
+      <p class="lede">Xcode builds, old simulators, <code>node_modules</code>, Gradle and Docker caches. Disk Cleaner shows what they are, how big, and whether they come back on their own — then moves the ones you pick to the Trash.</p>
+      <div class="actions">
+        <a class="button" href="#download">Download free</a>
+        <span class="fine">For macOS 26 or later. Notarized by Apple.</span>
+      </div>
+    </section>
+
+    <!-- The one moving thing on the page: a sample developer disk you can clean. -->
+    <section class="demo" aria-labelledby="demo-title">
+      <div class="demo__head">
+        <h2 id="demo-title" class="demo__title">A typical developer disk</h2>
+        <div class="disk" aria-live="polite">
+          <div class="disk__bar"><span class="disk__used" id="disk-used"></span></div>
+          <span class="disk__text"><strong id="disk-free">—</strong> free of 494 GB</span>
+        </div>
+      </div>
+
+      <div class="map" id="map" role="group" aria-label="Disk map. Each tile is a folder; its size is proportional to the space it takes."></div>
+
+      <div class="demo__foot">
+        <p class="detail" id="detail" aria-live="polite">Point at a tile to see what it is and whether it comes back on its own.</p>
+        <button class="button button--clean" id="clean" type="button">Clean</button>
+      </div>
+
+      <ul class="legend" aria-label="Tile colors">
+        <li><span class="swatch swatch--rebuildable"></span>Rebuilds itself</li>
+        <li><span class="swatch swatch--likely"></span>Probably safe</li>
+        <li><span class="swatch swatch--review"></span>Your call</li>
+        <li><span class="swatch swatch--yours"></span>Your files — never selected for you</li>
+      </ul>
+    </section>
+
+    <section class="finds" aria-labelledby="finds-title">
+      <h2 id="finds-title">What it looks at</h2>
+      <p class="section-lede">Only sections with something on your Mac show up. If you don't use Docker, you won't see Docker.</p>
+      <dl class="finds__list">
+        <div>
+          <dt>Xcode</dt>
+          <dd>Build products, previews, device symbols and archives.<span class="paths">~/Library/Developer/Xcode/DerivedData</span></dd>
+        </div>
+        <div>
+          <dt>Simulators</dt>
+          <dd>Runtimes you no longer target and devices whose runtime is already gone.</dd>
+        </div>
+        <div>
+          <dt>Packages and toolchains</dt>
+          <dd>npm, Yarn, Bun, pnpm, CocoaPods, Gradle, Cargo, Maven, Go, pip, Homebrew, Metro and Expo caches.<span class="paths">~/.npm, ~/.gradle/caches, ~/.cargo/registry</span></dd>
+        </div>
+        <div>
+          <dt>IDEs</dt>
+          <dd>Android Studio and the Android SDK — NDK versions, system images, build tools — plus JetBrains IDEs, VS Code, Cursor and Zed.</dd>
+        </div>
+        <div>
+          <dt>Docker</dt>
+          <dd>Build cache, stopped containers and unused images. Volumes are never touched.</dd>
+        </div>
+        <div>
+          <dt>Your files</dt>
+          <dd>Large files, byte-identical duplicates, and a map of any folder you want to understand.</dd>
+        </div>
+        <div>
+          <dt>Applications</dt>
+          <dd>Every app with its size and when you last opened it.</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="safety" aria-labelledby="safety-title">
+      <h2 id="safety-title">How it stays out of trouble</h2>
+      <ul class="safety__list">
+        <li><strong>Nothing is deleted.</strong> Everything you clean goes to the Trash, so you can put it back.</li>
+        <li><strong>You always see the list first</strong> — every item and its size — before anything moves.</li>
+        <li><strong>Personal folders stay out of reach.</strong> Documents, Desktop, iCloud, Mail, Messages and Keychains are never cleaned automatically, and macOS-protected folders are never even read.</li>
+        <li><strong>No network unless you say so.</strong> On first launch you choose whether to share anonymous statistics. <a href="/privacy">What exactly is sent</a></li>
+      </ul>
+    </section>
+
+    <section class="download" id="download" aria-labelledby="download-title">
+      <img src="/assets/app-icon.png" alt="Disk Cleaner app icon" width="112" height="112">
+      <div>
+        <h2 id="download-title">Download Disk Cleaner</h2>
+        <!-- Release block: update together with each DMG (scripts/make_dmg.sh prints size and SHA-256). -->
+        <p class="release">Version 1.0 for macOS 26 or later, on Apple silicon and Intel Macs.</p>
+        <a class="button" href="https://downloads.machealthapps.com/DiskCleaner-1.0.dmg">Download DiskCleaner-1.0.dmg (4.4 MB)</a>
+        <p class="fine">Open the disk image and drag Disk Cleaner to Applications. For complete results, allow Full Disk Access in System Settings → Privacy &amp; Security.</p>
+        <p class="checksum">SHA-256 <code>3eab67225c2fb5c9fe92998717b8fbb12033f4e7e9aba5e4a86557f29c1a9229</code></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>© 2026 Mac Health Apps</span>
+    <a href="/privacy">Privacy</a>
+    <a href="mailto:support@machealthapps.com">support@machealthapps.com</a>
+  </footer>
+</body>
+</html>

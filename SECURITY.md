@@ -1,6 +1,6 @@
 # Security
 
-DevSpace deletes files and runs developer tools, so a bug can cost someone their data. We treat the following
+Disk Cleaner deletes files and runs developer tools, so a bug can cost someone their data. We treat the following
 as security issues:
 
 - anything that removes, moves or modifies files outside what the preview showed;
