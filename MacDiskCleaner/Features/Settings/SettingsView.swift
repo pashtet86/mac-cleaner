@@ -3,9 +3,26 @@ import SwiftUI
 /// Disk Cleaner → Settings… (⌘,).
 struct SettingsView: View {
     private let telemetry = Telemetry.shared
+    @Bindable private var updater = Updater.shared
 
     var body: some View {
         Form {
+            Section("Updates") {
+                LabeledContent("Version", value: "\(updater.version) (\(updater.build))")
+                if updater.isAvailable {
+                    Toggle("Check for updates automatically", isOn: $updater.automaticallyChecks)
+                    Toggle("Download and install updates automatically", isOn: $updater.automaticallyDownloads)
+                        .disabled(!updater.automaticallyChecks)
+                    LabeledContent("Last checked") {
+                        Text(updater.lastCheck.map { $0.formatted(.relative(presentation: .named)) } ?? "Never")
+                    }
+                    Button("Check Now") { updater.checkForUpdates() }
+                        .disabled(!updater.canCheck)
+                } else {
+                    Text("Updates are off in this build. Release builds check once a day.")
+                        .foregroundStyle(.secondary)
+                }
+            }
             Section("Privacy") {
                 if telemetry.isAvailable {
                     Toggle(

@@ -20,7 +20,8 @@ build: ## Debug build
 	@$(XCODEBUILD) -configuration Debug -quiet build
 
 release: ## Release build (ad-hoc signed, works without certificates — used by CI)
-	@$(XCODEBUILD) -configuration Release -quiet build CODE_SIGN_IDENTITY=- OTHER_CODE_SIGN_FLAGS=
+	@$(XCODEBUILD) -configuration Release -quiet build CODE_SIGN_IDENTITY=- OTHER_CODE_SIGN_FLAGS= \
+		ENABLE_HARDENED_RUNTIME=NO
 
 test: ## Run unit tests
 	@$(XCODEBUILD) -quiet test
@@ -41,7 +42,7 @@ run: build ## Build and launch the app
 
 snapshots: build ## Render every screen in light and dark mode to build/snapshots (Debug only)
 	@pkill -f "Disk Cleaner.app/Contents/MacOS/Disk Cleaner" && sleep 1 || true
-	@"$(APP)/Contents/MacOS/Disk Cleaner" -snapshotDir $(CURDIR)/build/snapshots
+	@open -W -n "$(APP)" --args -snapshotDir $(CURDIR)/build/snapshots
 	@echo "Snapshots in build/snapshots"
 
 dmg: ## Universal Release build packaged as build/dist/DiskCleaner-<version>.dmg (ad-hoc signed)

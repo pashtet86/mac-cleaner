@@ -12,6 +12,7 @@ how risky that is and what happens next.
 |---|---|
 | **Overview** | Disk usage split by category, with what is safe to clean right now |
 | **Files Inspector** | A treemap of any folder in your home: open folders to go deeper, see sizes, select files and folders to remove. Every tile is colored by how safe it is to delete — rebuildable, likely safe, review, your files, protected — with the reason |
+| **Environments** | Developer tools graded against official release schedules — update now, soon, when convenient, up to date — with the exact command to copy |
 | **App Caches** | `~/Library/Caches`, logs, Slack and updater downloads |
 | **Large Files** | Files over 100 MB / 500 MB / 1 GB, grouped into videos, installers & disk images, archives |
 | **Duplicates** | Byte-identical copies over 1 / 10 / 100 MB (size → sampled hash → SHA-256); hard links count once |
@@ -20,9 +21,10 @@ how risky that is and what happens next.
 | **IDEs** | Android Studio and the Android SDK (NDK, system images, build tools), JetBrains IDEs, VS Code / Cursor / Windsurf, Zed |
 | **Packages & Toolchains** | npm, Yarn, Bun, pnpm, Metro, Expo, CocoaPods, Gradle, SwiftPM, Homebrew, Cargo, rustup, Maven, Go, pip, uv and more |
 | **Docker** | Images, containers and build cache via the Docker CLI — volumes are never removed |
+| **Security** | SIP, Gatekeeper, FileVault; every launch agent and daemon with who signed it; leftovers and programs started from folders anyone can write to |
+| **Network** | Firewall and stealth mode; which apps accept connections from other devices and which only from this Mac |
 | **Temperatures** | Hottest CPU core, SSD and the macOS thermal state, pinned to the bottom of the sidebar |
-
-Coming next: security audit (launch agents, login items, code signatures) and network (listening ports, firewall).
+| **Updates** | Checks once a day (Sparkle); a quiet "Update to x.y" line in the sidebar, signed updates only |
 
 ## Safety model
 
@@ -97,6 +99,35 @@ TELEMETRY_ENDPOINT=https://… make dmg-signed
 ```
 
 `store-credentials` asks for an app-specific password and keeps it in your keychain; never put it in the repository.
+
+## Releasing an update
+
+Installed copies check `https://downloads.machealthapps.com/appcast.xml` once a day with
+[Sparkle](https://sparkle-project.org). An update is installed only if its archive carries a valid EdDSA signature
+for the public key in `Config/MacDiskCleaner-Info.plist` **and** the new app is signed with the same Developer ID.
+
+One-time setup on the release Mac:
+
+1. Notarization credentials — see above.
+2. The update signing key, kept in the login Keychain:
+   `build/DerivedData/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys --account com.machealthapps.diskcleaner`
+   (prints the public key; it is already in Info.plist). **Back up the private key** with
+   `generate_keys --account com.machealthapps.diskcleaner -x <file>` and store it in a password manager — without it
+   no installed copy will accept another update.
+3. `npx wrangler login` with access to the `downloads` R2 bucket.
+
+Each release:
+
+```sh
+# 1. Move the Unreleased notes in CHANGELOG.md under "## [1.1] - <date>"
+scripts/release.sh 1.1
+# 2. Commit the version bump and tag it (the script prints the commands)
+```
+
+`release.sh` sets the version and build number, builds a notarized DMG, turns the CHANGELOG section into release
+notes, signs the DMG and updates the appcast, then — after you confirm — uploads `DiskCleaner-1.1.dmg`,
+`DiskCleaner.dmg` (always the latest, for the website) and `appcast.xml` last. Users can turn automatic checks or
+automatic installs off in Settings, or use **Disk Cleaner → Check for Updates**. Debug builds never update.
 
 ## Anonymous statistics (optional)
 

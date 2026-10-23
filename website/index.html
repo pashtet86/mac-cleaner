@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Disk Cleaner — free up space on a developer's Mac</title>
-  <meta name="description" content="Disk Cleaner finds Xcode builds, simulators, node_modules, Gradle and Docker caches on your Mac, shows what is safe to remove, and moves it to the Trash.">
+  <title>Disk Cleaner — the Mac health app for developers</title>
+  <meta name="description" content="Disk Cleaner cleans Xcode builds, simulators, node_modules, Gradle and Docker caches, flags toolchains past end of life, and checks your Mac's security and network settings. Native, local, Trash-only.">
   <meta name="color-scheme" content="light dark">
   <link rel="icon" type="image/png" href="/assets/favicon.png">
   <link rel="apple-touch-icon" href="/assets/app-icon.png">
-  <meta property="og:title" content="Disk Cleaner">
-  <meta property="og:description" content="See what fills a developer's Mac. Keep what matters, clean the rest safely.">
+  <meta property="og:title" content="Disk Cleaner — the Mac health app for developers">
+  <meta property="og:description" content="Clean the disk, update your toolchains, lock down your Mac. One native app, built for developers.">
   <meta property="og:image" content="https://machealthapps.com/assets/app-icon.png">
   <link rel="stylesheet" href="/styles.css">
   <script src="/treemap.js" defer></script>
@@ -22,96 +22,301 @@
       <img src="/assets/app-icon.png" alt="" width="28" height="28">
       Disk Cleaner
     </a>
-    <a class="button button--small" href="#download">Download for Mac</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#clean">Clean</a>
+      <a href="#toolchains">Toolchains</a>
+      <a href="#security">Security</a>
+      <a href="#safety">Safety</a>
+    </nav>
+    <a class="button button--small" href="#download">Download</a>
   </header>
 
   <main id="main">
-    <section class="intro">
-      <h1>Your Mac is full of things that rebuild themselves.</h1>
-      <p class="lede">Xcode builds, old simulators, <code>node_modules</code>, Gradle and Docker caches. Disk Cleaner shows what they are, how big, and whether they come back on their own — then moves the ones you pick to the Trash.</p>
-      <div class="actions">
-        <a class="button" href="#download">Download free</a>
-        <span class="fine">For macOS 26 or later. Notarized by Apple.</span>
-      </div>
-    </section>
-
-    <!-- The one moving thing on the page: a sample developer disk you can clean. -->
-    <section class="demo" aria-labelledby="demo-title">
-      <div class="demo__head">
-        <h2 id="demo-title" class="demo__title">A typical developer disk</h2>
-        <div class="disk" aria-live="polite">
-          <div class="disk__bar"><span class="disk__used" id="disk-used"></span></div>
-          <span class="disk__text"><strong id="disk-free">—</strong> free of 494 GB</span>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__copy">
+        <p class="eyebrow">Built for developers</p>
+        <h1 id="hero-title">Know your Mac's health.<br>All in one&nbsp;app.</h1>
+        <p class="lede">Xcode, simulators, Android SDKs, <code>node_modules</code>, Docker, five Node versions and a Postgres you forgot about. Disk Cleaner finds what's eating your disk, what's out of date and what's exposed, then helps you fix it — with a preview before anything changes.</p>
+        <div class="actions">
+          <a class="button" href="#download">Download for free</a>
+          <a class="button button--ghost" href="#pillars">See what it checks</a>
         </div>
+        <ul class="trust" aria-label="At a glance">
+          <li>Native SwiftUI app</li>
+          <li>Notarized by Apple</li>
+          <li>Trash, never <code>rm</code></li>
+          <li>No account</li>
+        </ul>
       </div>
 
-      <div class="map" id="map" role="group" aria-label="Disk map. Each tile is a folder; its size is proportional to the space it takes."></div>
-
-      <div class="demo__foot">
-        <p class="detail" id="detail" aria-live="polite">Point at a tile to see what it is and whether it comes back on its own.</p>
-        <button class="button button--clean" id="clean" type="button">Clean</button>
-      </div>
-
-      <ul class="legend" aria-label="Tile colors">
-        <li><span class="swatch swatch--rebuildable"></span>Rebuilds itself</li>
-        <li><span class="swatch swatch--likely"></span>Probably safe</li>
-        <li><span class="swatch swatch--review"></span>Your call</li>
-        <li><span class="swatch swatch--yours"></span>Your files — never selected for you</li>
-      </ul>
+      <!-- Sample scan summary. Static, generic data — no real machine. -->
+      <figure class="report" aria-label="Example scan summary">
+        <div class="report__bar" aria-hidden="true"><span></span><span></span><span></span></div>
+        <figcaption class="report__title">
+          <span>Mac health</span>
+          <span class="report__time">scan finished in 38 s</span>
+        </figcaption>
+        <ol class="report__rows">
+          <li class="row row--disk">
+            <span class="row__area">Disk</span>
+            <span class="row__value"><strong>62.4 GB</strong> rebuilds itself</span>
+            <span class="row__note">DerivedData · node_modules · Gradle</span>
+          </li>
+          <li class="row row--warn">
+            <span class="row__area">Toolchains</span>
+            <span class="row__value"><strong>3</strong> need an update</span>
+            <span class="row__note">Node.js 18 has reached end of life</span>
+          </li>
+          <li class="row row--critical">
+            <span class="row__area">Security</span>
+            <span class="row__value"><strong>1</strong> critical</span>
+            <span class="row__note">A launch daemon runs from a folder anyone can write to</span>
+          </li>
+          <li class="row row--warn">
+            <span class="row__area">Network</span>
+            <span class="row__value"><strong>2</strong> services open</span>
+            <span class="row__note">PostgreSQL on port 5432 is open to your network</span>
+          </li>
+          <li class="row row--ok">
+            <span class="row__area">Thermal</span>
+            <span class="row__value"><strong>Nominal</strong></span>
+            <span class="row__note">Hottest core 54 °C</span>
+          </li>
+        </ol>
+      </figure>
     </section>
 
-    <section class="finds" aria-labelledby="finds-title">
-      <h2 id="finds-title">What it looks at</h2>
-      <p class="section-lede">Only sections with something on your Mac show up. If you don't use Docker, you won't see Docker.</p>
+    <section class="numbers" aria-label="Coverage">
+      <div><strong>39</strong><span>cleanup rules for dev tools and apps</span></div>
+      <div><strong>19</strong><span>toolchains checked against release schedules</span></div>
+      <div><strong>15+</strong><span>security and network checks</span></div>
+      <div><strong>0</strong><span>files deleted without your OK</span></div>
+    </section>
+
+    <section class="pillars" id="pillars" aria-labelledby="pillars-title">
+      <p class="eyebrow">One app instead of five</p>
+      <h2 id="pillars-title">Cleaner, version checker and security audit in one window.</h2>
+      <div class="pillars__grid">
+        <a class="pillar pillar--clean" href="#clean">
+          <span class="pillar__tag">Clean</span>
+          <h3>Get the disk back</h3>
+          <p>Build products, simulator runtimes, SDKs, package caches, Docker layers, large files and duplicates.</p>
+        </a>
+        <a class="pillar pillar--tools" href="#toolchains">
+          <span class="pillar__tag">Toolchains</span>
+          <h3>Know what's out of date</h3>
+          <p>Every Node, Python, Ruby, JDK and Go on your <code>PATH</code>, graded against official end-of-life dates.</p>
+        </a>
+        <a class="pillar pillar--security" href="#security">
+          <span class="pillar__tag">Security</span>
+          <h3>Spot what shouldn't be there</h3>
+          <p>System protections, launch agents and daemons, unsigned or orphaned background code.</p>
+        </a>
+        <a class="pillar pillar--network" href="#security">
+          <span class="pillar__tag">Network</span>
+          <h3>See what's listening</h3>
+          <p>Firewall, sharing services, proxies — and dev servers or databases open to the whole Wi‑Fi.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="feature" id="clean" aria-labelledby="clean-title">
+      <div class="feature__head">
+        <p class="eyebrow eyebrow--clean">Clean</p>
+        <h2 id="clean-title">Tens of gigabytes that rebuild themselves.</h2>
+        <p class="section-lede">Every item says what it is, how big it is and what happens after it's gone. Try it on a typical iOS and React Native disk.</p>
+      </div>
+
+      <!-- The one moving thing on the page: a sample developer disk you can clean. -->
+      <div class="demo" aria-labelledby="demo-title">
+        <div class="demo__head">
+          <h3 id="demo-title" class="demo__title">A typical developer disk</h3>
+          <div class="disk" aria-live="polite">
+            <div class="disk__bar"><span class="disk__used" id="disk-used"></span></div>
+            <span class="disk__text"><strong id="disk-free">—</strong> free of 494 GB</span>
+          </div>
+        </div>
+
+        <div class="map" id="map" role="group" aria-label="Disk map. Each tile is a folder; its size is proportional to the space it takes."></div>
+
+        <div class="demo__foot">
+          <p class="detail" id="detail" aria-live="polite">Point at a tile to see what it is and whether it comes back on its own.</p>
+          <button class="button button--clean" id="clean-button" type="button">Clean</button>
+        </div>
+
+        <ul class="legend" aria-label="Tile colors">
+          <li><span class="swatch swatch--rebuildable"></span>Rebuilds itself</li>
+          <li><span class="swatch swatch--likely"></span>Probably safe</li>
+          <li><span class="swatch swatch--review"></span>Your call</li>
+          <li><span class="swatch swatch--yours"></span>Your files — never selected for you</li>
+        </ul>
+      </div>
+
       <dl class="finds__list">
         <div>
-          <dt>Xcode</dt>
-          <dd>Build products, previews, device symbols and archives.<span class="paths">~/Library/Developer/Xcode/DerivedData</span></dd>
+          <dt>Xcode &amp; simulators</dt>
+          <dd>DerivedData, previews, device symbols, archives, runtimes you no longer target and devices whose runtime is gone.<span class="paths">~/Library/Developer/Xcode/DerivedData</span></dd>
         </div>
         <div>
-          <dt>Simulators</dt>
-          <dd>Runtimes you no longer target and devices whose runtime is already gone.</dd>
+          <dt>Packages &amp; toolchains</dt>
+          <dd>npm, Yarn, Bun, pnpm, CocoaPods, Gradle, SwiftPM, Cargo, Maven, Go, pip, uv, Homebrew, Metro and Expo.<span class="paths">~/.npm, ~/.gradle/caches, ~/.cargo/registry</span></dd>
         </div>
         <div>
-          <dt>Packages and toolchains</dt>
-          <dd>npm, Yarn, Bun, pnpm, CocoaPods, Gradle, Cargo, Maven, Go, pip, Homebrew, Metro and Expo caches.<span class="paths">~/.npm, ~/.gradle/caches, ~/.cargo/registry</span></dd>
-        </div>
-        <div>
-          <dt>IDEs</dt>
-          <dd>Android Studio and the Android SDK — NDK versions, system images, build tools — plus JetBrains IDEs, VS Code, Cursor and Zed.</dd>
+          <dt>IDEs &amp; SDKs</dt>
+          <dd>Android Studio and the Android SDK — NDK versions, system images, build tools — plus JetBrains, VS Code, Cursor and Zed.</dd>
         </div>
         <div>
           <dt>Docker</dt>
-          <dd>Build cache, stopped containers and unused images. Volumes are never touched.</dd>
+          <dd>Build cache, stopped containers and unused images through the Docker CLI. Volumes are never touched.</dd>
         </div>
         <div>
           <dt>Your files</dt>
-          <dd>Large files, byte-identical duplicates, and a map of any folder you want to understand.</dd>
+          <dd>Large files, byte-identical duplicates and a map of any folder — never preselected.</dd>
         </div>
         <div>
           <dt>Applications</dt>
-          <dd>Every app with its size and when you last opened it.</dd>
+          <dd>Every app with its size and when you last opened it, plus app caches, logs and updater leftovers.</dd>
         </div>
       </dl>
     </section>
 
-    <section class="safety" aria-labelledby="safety-title">
-      <h2 id="safety-title">How it stays out of trouble</h2>
-      <ul class="safety__list">
-        <li><strong>Nothing is deleted.</strong> Everything you clean goes to the Trash, so you can put it back.</li>
-        <li><strong>You always see the list first</strong> — every item and its size — before anything moves.</li>
-        <li><strong>Personal folders stay out of reach.</strong> Documents, Desktop, iCloud, Mail, Messages and Keychains are never cleaned automatically, and macOS-protected folders are never even read.</li>
-        <li><strong>No network unless you say so.</strong> On first launch you choose whether to share anonymous statistics. <a href="/privacy">What exactly is sent</a></li>
+    <section class="feature feature--split" id="toolchains" aria-labelledby="tools-title">
+      <div class="feature__head">
+        <p class="eyebrow eyebrow--tools">Toolchains</p>
+        <h2 id="tools-title">Five Node versions. One of them reached end of life.</h2>
+        <p class="section-lede">Disk Cleaner finds the runtimes you installed through Homebrew, nvm, fnm, Volta, pyenv, rbenv, asdf and rustup, and grades each one against its official release schedule.</p>
+        <ul class="checks">
+          <li>Rates each one <strong>update now</strong>, <strong>soon</strong> or <strong>when convenient</strong> — and says why.</li>
+          <li>Gives you the exact command for <em>your</em> install method. You run it; nothing changes behind your back.</li>
+          <li>Works offline until you press Check Online. Your versions are never sent.</li>
+        </ul>
+      </div>
+
+      <figure class="panel" aria-label="Example toolchain report">
+        <table class="tools">
+          <thead>
+            <tr><th scope="col">Tool</th><th scope="col">Installed</th><th scope="col">Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Node.js <span class="via">nvm</span></td><td><code>18.20.4</code></td>
+              <td><span class="badge badge--now">Update now</span></td>
+            </tr>
+            <tr class="tools__cmd"><td colspan="3"><code>nvm install 22 &amp;&amp; nvm alias default 22</code></td></tr>
+            <tr>
+              <td>Python <span class="via">pyenv</span></td><td><code>3.9.19</code></td>
+              <td><span class="badge badge--soon">Soon</span></td>
+            </tr>
+            <tr>
+              <td>Java <span class="via">JDK</span></td><td><code>17.0.12</code></td>
+              <td><span class="badge badge--later">When convenient</span></td>
+            </tr>
+            <tr>
+              <td>Ruby <span class="via">rbenv</span></td><td><code>3.3.5</code></td>
+              <td><span class="badge badge--ok">Up to date</span></td>
+            </tr>
+            <tr>
+              <td>CocoaPods <span class="via">Homebrew</span></td><td><code>1.16.2</code></td>
+              <td><span class="badge badge--ok">Up to date</span></td>
+            </tr>
+            <tr>
+              <td>Rust <span class="via">rustup</span></td><td><code>1.82.0</code></td>
+              <td><span class="badge badge--ok">Up to date</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    </section>
+
+    <section class="feature feature--split feature--flip" id="security" aria-labelledby="security-title">
+      <div class="feature__head">
+        <p class="eyebrow eyebrow--security">Security &amp; network</p>
+        <h2 id="security-title">The audit you'd run by hand — in one click.</h2>
+        <p class="section-lede">Years of SDKs, installers and helper tools leave background code behind. Disk Cleaner reads what macOS starts at login and what's listening on your network, and explains each finding in plain words.</p>
+        <ul class="checks">
+          <li><strong>System protections</strong> — SIP, Gatekeeper, FileVault, device management.</li>
+          <li><strong>Launch agents &amp; daemons</strong> — unsigned code, programs that no longer exist, anything that runs from a folder anyone can write to.</li>
+          <li><strong>Network</strong> — firewall and stealth mode, Screen Sharing, SMB, AirPlay, proxies, and Postgres, Redis, MongoDB or a dev server exposed beyond <code>localhost</code>.</li>
+        </ul>
+      </div>
+
+      <figure class="panel" aria-label="Example security findings">
+        <ul class="findings">
+          <li class="finding finding--critical">
+            <span class="finding__dot" aria-hidden="true"></span>
+            <div>
+              <strong>A launch daemon runs from a folder anyone can write to</strong>
+              <span>Any app could replace that file and have it run as root.</span>
+            </div>
+            <span class="finding__level">Critical</span>
+          </li>
+          <li class="finding finding--warn">
+            <span class="finding__dot" aria-hidden="true"></span>
+            <div>
+              <strong>Firewall is off</strong>
+              <span>Incoming connections reach every service that listens.</span>
+            </div>
+            <span class="finding__level">Warning</span>
+          </li>
+          <li class="finding finding--warn">
+            <span class="finding__dot" aria-hidden="true"></span>
+            <div>
+              <strong>PostgreSQL on port 5432 is open to your network</strong>
+              <span>Bind it to 127.0.0.1 unless others need it.</span>
+            </div>
+            <span class="finding__level">Warning</span>
+          </li>
+          <li class="finding finding--info">
+            <span class="finding__dot" aria-hidden="true"></span>
+            <div>
+              <strong>Two launch agents point to programs that no longer exist</strong>
+              <span>Leftovers from uninstalled updaters. Safe to remove.</span>
+            </div>
+            <span class="finding__level">Info</span>
+          </li>
+          <li class="finding finding--ok">
+            <span class="finding__dot" aria-hidden="true"></span>
+            <div>
+              <strong>SIP, Gatekeeper and FileVault are on</strong>
+            </div>
+            <span class="finding__level">OK</span>
+          </li>
+        </ul>
+      </figure>
+    </section>
+
+    <section class="stack" aria-labelledby="stack-title">
+      <h2 id="stack-title">Knows your stack.</h2>
+      <p class="section-lede">Sections appear only for tools you actually have. No Docker, no Docker page.</p>
+      <ul class="chips">
+        <li>Xcode</li><li>Simulators</li><li>SwiftPM</li><li>CocoaPods</li><li>Android Studio</li><li>Android SDK</li>
+        <li>Gradle</li><li>React Native</li><li>Expo</li><li>Metro</li><li>Flutter</li><li>Node.js</li><li>npm</li>
+        <li>Yarn</li><li>pnpm</li><li>Bun</li><li>Deno</li><li>Python</li><li>uv</li><li>pip</li><li>Ruby</li>
+        <li>Java</li><li>Kotlin</li><li>Maven</li><li>Go</li><li>Rust</li><li>Cargo</li><li>Docker</li><li>Homebrew</li>
+        <li>JetBrains</li><li>VS Code</li><li>Cursor</li><li>Zed</li>
+      </ul>
+    </section>
+
+    <section class="safety" id="safety" aria-labelledby="safety-title">
+      <p class="eyebrow">Built not to break things</p>
+      <h2 id="safety-title">Confident, because it's careful.</h2>
+      <ul class="safety__grid">
+        <li><strong>Trash, never <code>rm</code>.</strong> Everything you clean goes to the Trash, so you can put it back.</li>
+        <li><strong>Preview first.</strong> Every item and its size, before anything moves. Only items that rebuild themselves are preselected.</li>
+        <li><strong>Personal folders stay out of reach.</strong> Documents, Desktop, iCloud, Mail, Messages and Keychains are never cleaned automatically; cloud folders are never even read.</li>
+        <li><strong>No shell, no surprises.</strong> <code>simctl</code> and <code>docker</code> run from a fixed allowlist with validated arguments. Fixes that need admin rights are shown as a command you run yourself.</li>
+        <li><strong>Local by default.</strong> No account. No network access unless you press Check Online or opt in to anonymous statistics. <a href="/privacy">See exactly what's sent</a></li>
+        <li><strong>Native and light.</strong> A 4&nbsp;MB SwiftUI app for Apple silicon and Intel. Signed with a Developer ID and notarized by Apple.</li>
       </ul>
     </section>
 
     <section class="download" id="download" aria-labelledby="download-title">
       <img src="/assets/app-icon.png" alt="Disk Cleaner app icon" width="112" height="112">
       <div>
-        <h2 id="download-title">Download Disk Cleaner</h2>
+        <h2 id="download-title">Give your Mac a health check today.</h2>
         <!-- Release block: update together with each DMG (scripts/make_dmg.sh prints size and SHA-256). -->
-        <p class="release">Version 1.0 for macOS 26 or later, on Apple silicon and Intel Macs.</p>
-        <a class="button" href="https://downloads.machealthapps.com/DiskCleaner-1.0.dmg">Download DiskCleaner-1.0.dmg (4.4 MB)</a>
+        <p class="release">Free. Version 1.0 for macOS 26 or later, on Apple silicon and Intel Macs.</p>
+        <a class="button button--large" href="https://downloads.machealthapps.com/DiskCleaner-1.0.dmg">Download DiskCleaner-1.0.dmg (4.4 MB)</a>
         <p class="fine">Open the disk image and drag Disk Cleaner to Applications. For complete results, allow Full Disk Access in System Settings → Privacy &amp; Security.</p>
         <p class="checksum">SHA-256 <code>3eab67225c2fb5c9fe92998717b8fbb12033f4e7e9aba5e4a86557f29c1a9229</code></p>
       </div>

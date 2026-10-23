@@ -20,8 +20,15 @@ enum DebugSnapshot {
         return URL(fileURLWithPath: args[index + 1], isDirectory: true)
     }
 
-    static func run(select: (AppSection) -> Void, files: FileScans, inspector: InspectorStore) async {
+    static func run(
+        select: (AppSection) -> Void, files: FileScans, inspector: InspectorStore, environments: EnvironmentsStore
+    ) async {
         guard let directory else { return }
+        // `-snapshotCheckOnline` grades Environments against the live release schedules first.
+        if ProcessInfo.processInfo.arguments.contains("-snapshotCheckOnline") {
+            await environments.scan()
+            await environments.checkOnline()
+        }
         if let root = filesRoot {
             inspector.debugSetRoot(root)
             inspector.scan()

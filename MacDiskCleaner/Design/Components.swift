@@ -501,10 +501,12 @@ struct FlowLayout: Layout {
 
 /// Small red dot marking a section with something worth cleaning.
 struct AttentionDot: View {
+    var size: CGFloat = 7
+
     var body: some View {
         Circle()
             .fill(Theme.attention)
-            .frame(width: 7, height: 7)
+            .frame(width: size, height: size)
             .shadow(color: Theme.attention.opacity(0.5), radius: 3)
             .accessibilityLabel("Something to clean")
     }

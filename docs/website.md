@@ -11,5 +11,6 @@ Deploy (Cloudflare Pages, once per change):
 npx wrangler pages deploy website --project-name machealthapps
 ```
 
-Each release: upload the DMG to the R2 bucket served at `downloads.machealthapps.com`, then update the release block
-in `index.html` (version, file name, SHA-256 printed by `make dmg-signed`).
+Each release: `scripts/release.sh <version>` uploads the DMG, `DiskCleaner.dmg` (latest) and the update feed to the
+R2 bucket served at `downloads.machealthapps.com` (see README → Releasing an update). Then update the release block in
+`index.html` (version, size, SHA-256 printed by the script).

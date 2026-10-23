@@ -7,11 +7,15 @@ struct SectionAvailability {
     let simulators: SimulatorsStore
     let docker: DockerStore
     let apps: AppsStore
+    let environments: EnvironmentsStore
+    let security: SecurityStore
+    let network: NetworkStore
 
     /// `true` found, `false` nothing on this Mac, `nil` still detecting.
     func state(of section: AppSection) -> Bool? {
         switch section {
-        case .overview, .inspector, .applications, .largeFiles, .duplicates:
+        case .overview, .inspector, .applications, .largeFiles, .duplicates, .environments, .files, .security,
+            .network:
             return true
         case .apps, .xcode, .ides, .packages:
             guard cleanup.scannedAt != nil, let rules = section.ruleSection else { return nil }
@@ -25,8 +29,6 @@ struct SectionAvailability {
             case .notInstalled: return false
             case .notRunning, .running: return true
             }
-        case .security, .network:
-            return false
         }
     }
 
@@ -56,14 +58,35 @@ struct SectionAvailability {
         return bytes >= Self.attentionThreshold ? bytes : nil
     }
 
+    /// Tooltip for the red dot, or nil when the section needs no attention.
+    func attentionMessage(for section: AppSection) -> String? {
+        if section == .environments {
+            let count =
+                environments.checkedAt != nil
+                ? environments.needsAttention : (environments.urgentSummary?.names.count ?? 0)
+            return count > 0 ? "\(count) update\(count == 1 ? "" : "s") needed now" : nil
+        }
+        if let alert = healthAlert(for: section) { return alert.title }
+        return attention(for: section).map { "\($0.formattedBytes) safe to clean" }
+    }
+
+    /// Security and Network: findings marked "Fix now" or "Review".
+    func healthAlert(for section: AppSection) -> HealthAlert? {
+        switch section {
+        case .security: security.alert
+        case .network: network.alert
+        default: nil
+        }
+    }
+
     func visible(_ sections: [AppSection], keeping selected: AppSection?) -> [AppSection] {
         sections.filter { state(of: $0) == true || $0 == selected }
     }
 
     /// Supported sections with nothing on this Mac.
-    var notFound: [AppSection] { (AppSection.mac + AppSection.developer).filter { state(of: $0) == false } }
+    var notFound: [AppSection] { AppSection.clean.filter { state(of: $0) == false } }
 
-    var isDetecting: Bool { (AppSection.mac + AppSection.developer).contains { state(of: $0) == nil } }
+    var isDetecting: Bool { AppSection.clean.contains { state(of: $0) == nil } }
 
     /// Starts every detection in parallel; each store skips work it already did.
     func detectAll() async {
@@ -71,6 +94,8 @@ struct SectionAvailability {
         async let sims: Void = simulators.refreshIfNeeded()
         async let dock: Void = docker.refreshIfNeeded()
         async let installed: Void = apps.refreshIfNeeded()
-        _ = await (scan, sims, dock, installed)
+        async let protections: Void = security.scanIfNeeded()
+        async let ports: Void = network.scanIfNeeded()
+        _ = await (scan, sims, dock, installed, protections, ports)
     }
 }

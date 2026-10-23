@@ -6,5 +6,21 @@
 	<!-- Empty (the default) disables telemetry entirely. -->
 	<key>DSTelemetryEndpoint</key>
 	<string>$(TELEMETRY_ENDPOINT)</string>
+
+	<!-- Updates (Sparkle). The appcast and DMGs are published by scripts/release.sh. -->
+	<key>SUFeedURL</key>
+	<string>https://downloads.machealthapps.com/appcast.xml</string>
+	<!-- Public half of the EdDSA key; the private half stays in the release Mac's Keychain. -->
+	<key>SUPublicEDKey</key>
+	<string>Bw6e3brtNuXzQfCkcODz7mkRs4NLnoWad4Vbd+lSksA=</string>
+	<!-- Check once a day without asking first; users can turn it off in Settings. -->
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUScheduledCheckInterval</key>
+	<integer>86400</integer>
+	<key>SUAllowsAutomaticUpdates</key>
+	<true/>
+	<key>SUVerifyUpdateBeforeExtraction</key>
+	<true/>
 </dict>
 </plist>

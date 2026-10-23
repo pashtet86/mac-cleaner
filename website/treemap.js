@@ -16,13 +16,13 @@ const ITEMS = [
   { id: "projects", name: "Your projects", size: 18.5, safety: "yours", detail: "Source code and assets. Only the build output inside them is ever suggested." },
   { id: "simruntimes", name: "Old simulator runtimes", size: 16.2, safety: "review", detail: "iOS 26.5 and tvOS 26.5. Remove the ones you no longer test on — Xcode downloads them again if needed." },
   { id: "deriveddata", name: "Xcode DerivedData", size: 11.7, safety: "rebuildable", detail: "Build products and indexes. Xcode rebuilds them on the next build." },
-  { id: "nodemodules", name: "node_modules (14 projects)", size: 9.4, safety: "rebuildable", detail: "JavaScript dependencies. npm, Yarn or pnpm install restores them." },
+  { id: "nodemodules", name: "node_modules (14 projects)", size: 9.4, safety: "rebuildable", detail: "JavaScript dependencies. Running npm, Yarn or pnpm install restores them." },
   { id: "ndk", name: "Android NDK versions", size: 9.9, safety: "review", detail: "Four NDK versions side by side. Keep the one your projects pin with ndkVersion." },
   { id: "xip", name: "Xcode_27.xip in Downloads", size: 5.9, safety: "likely", detail: "An installer that already did its job. Not needed once Xcode is installed." },
   { id: "devicesupport", name: "iOS DeviceSupport", size: 5.6, safety: "review", detail: "Debug symbols copied from your iPhones. Copied again, slowly, the next time a device connects." },
   { id: "gradle", name: "Gradle caches", size: 4.6, safety: "rebuildable", detail: "Dependencies and Gradle distributions. The next Android build downloads them again." },
   { id: "orphans", name: "Unavailable simulators", size: 3.5, safety: "rebuildable", detail: "Devices whose runtime was already removed. They can't boot anymore." },
-  { id: "docker", name: "Docker build cache", size: 2.4, safety: "rebuildable", detail: "Layers cached by docker build. The next build is slower once." },
+  { id: "docker", name: "Docker build cache", size: 2.4, safety: "rebuildable", detail: "Layers cached by docker build. Only the next build is slower." },
   { id: "expo", name: "Expo and Metro caches", size: 1.8, safety: "likely", detail: "Expo Go builds and bundler caches. Login and signing data are kept." },
   { id: "npm", name: "npm cache", size: 1.3, safety: "rebuildable", detail: "Downloaded package tarballs, the same as npm cache clean --force." },
 ];
@@ -31,7 +31,7 @@ const USED_OTHER = 318; // System, apps and everything outside the map.
 
 const map = document.getElementById("map");
 const detail = document.getElementById("detail");
-const clean = document.getElementById("clean");
+const clean = document.getElementById("clean-button");
 const diskFree = document.getElementById("disk-free");
 const diskUsed = document.getElementById("disk-used");
 
