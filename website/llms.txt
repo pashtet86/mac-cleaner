@@ -1,0 +1,56 @@
+# Disk Cleaner (Mac Cleaner)
+
+> Disk Cleaner is a free, native SwiftUI app for macOS 26 or later that keeps a developer's Mac healthy: it finds the
+> gigabytes that Xcode, simulators, Android SDKs, node_modules, package caches and Docker leave behind, and shows what
+> each item is, how big it is and what happens after it's gone. Everything removed goes to the Trash after a preview.
+> Made by Mac Health Apps, based in the Netherlands.
+
+Key facts:
+
+- Platform: macOS 26 or later, Apple silicon and Intel. Native SwiftUI app, about 6 MB, signed with a Developer ID and
+  notarized by Apple. Distributed directly from machealthapps.com, not through the Mac App Store (the App Store sandbox
+  can't read other apps' caches).
+- Price: free. No account.
+- Safety model: nothing is deleted without a preview of every item and its size; items go to the Trash, never `rm`;
+  only items that rebuild themselves are preselected; Documents, Desktop, iCloud, Mail, Messages and Keychains are never
+  cleaned automatically; cloud folders (`~/Library/CloudStorage`, `~/Library/Mobile Documents`) are never read;
+  external tools (`xcrun simctl`, `docker`) run from a fixed allowlist with validated arguments, no shell.
+- Privacy: local by default. Anonymous usage statistics only after opt-in (random install ID, app and macOS version,
+  architecture, bytes cleaned per section). No file names, paths, user or machine names are ever sent.
+- Full Disk Access is recommended for complete results; the user grants it in System Settings → Privacy & Security.
+
+What it cleans (each item marked “rebuilds itself”, “probably safe”, “your call” or “your files”):
+
+- Xcode: DerivedData, SwiftUI previews, device support symbols, archives.
+- Simulators: runtimes no longer targeted and devices whose runtime is gone (via `xcrun simctl`).
+- Packages and toolchains: npm, Yarn, Bun, pnpm, CocoaPods, Gradle, SwiftPM, Cargo, rustup, Maven, Go, pip, uv,
+  Homebrew, Metro and Expo caches.
+- IDEs and SDKs: Android Studio and the Android SDK (NDK versions, system images, build tools), JetBrains IDEs,
+  VS Code, Cursor, Windsurf, Zed.
+- Docker: build cache, stopped containers, unused images. Volumes are never removed.
+- App caches: `~/Library/Caches`, logs, Slack and updater downloads.
+- Your files: large files, byte-identical duplicates (size → sampled hash → SHA-256), a treemap of any folder. Never
+  preselected.
+- Applications: every app with its size and when it was last opened.
+
+Also on the page (being rolled out with the next releases): Environments — installed developer tools (Node.js, Python,
+Ruby, Java, Go, Rust, CocoaPods, Flutter, Docker, Git, Swift, Homebrew…) graded against official end-of-life dates with
+the exact update command for the install method (Homebrew, nvm, fnm, Volta, pyenv, rbenv, asdf, rustup); Security —
+SIP, Gatekeeper, FileVault, device management, launch agents and daemons that are unsigned, missing or run from
+world-writable folders; Network — firewall and stealth mode, sharing services, proxies, and databases or dev servers
+reachable from the local network. Temperatures: hottest CPU core, SSD and the macOS thermal state.
+
+## Pages
+
+- [Home](https://machealthapps.com/): what Disk Cleaner does, what it cleans, toolchain and security checks, safety model
+- [Download](https://machealthapps.com/download): the latest notarized DMG (redirect); open it and drag Disk Cleaner to Applications
+- [Privacy Policy](https://machealthapps.com/privacy): what the app and the website send, and what they never send
+- [Terms of Use](https://machealthapps.com/terms): licence, no warranty, limitation of liability, Dutch law
+
+## Support
+
+- [Email support](mailto:support@machealthapps.com): questions, bug reports, data removal requests
+
+## Optional
+
+- [Sitemap](https://machealthapps.com/sitemap.xml)

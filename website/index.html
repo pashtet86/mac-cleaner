@@ -8,11 +8,18 @@
   <meta name="color-scheme" content="light dark">
   <link rel="icon" type="image/png" href="/assets/favicon.png">
   <link rel="apple-touch-icon" href="/assets/app-icon.png">
+  <link rel="canonical" href="https://machealthapps.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://machealthapps.com/">
+  <meta name="twitter:card" content="summary">
   <meta property="og:title" content="Disk Cleaner — the Mac health app for developers">
   <meta property="og:description" content="Clean the disk, update your toolchains, lock down your Mac. One native app, built for developers.">
   <meta property="og:image" content="https://machealthapps.com/assets/app-icon.png">
+  <link rel="preload" href="/assets/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/styles.css">
-  <script src="/treemap.js" defer></script>
+  <script src="/analytics.js" defer></script>
+  <script src="/examples.js" defer></script>
+  <script src="/reveal.js" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -20,7 +27,7 @@
   <header class="bar">
     <a class="brand" href="/">
       <img src="/assets/app-icon.png" alt="" width="28" height="28">
-      Disk Cleaner
+      Mac Cleaner
     </a>
     <nav class="nav" aria-label="Sections">
       <a href="#clean">Clean</a>
@@ -28,7 +35,7 @@
       <a href="#security">Security</a>
       <a href="#safety">Safety</a>
     </nav>
-    <a class="button button--small" href="#download">Download</a>
+    <a class="button button--small" href="/download">Download</a>
   </header>
 
   <main id="main">
@@ -37,10 +44,14 @@
         <p class="eyebrow">Built for developers</p>
         <h1 id="hero-title">Know your Mac's health.<br>All in one&nbsp;app.</h1>
         <p class="lede">Xcode, simulators, Android SDKs, <code>node_modules</code>, Docker, five Node versions and a Postgres you forgot about. Disk Cleaner finds what's eating your disk, what's out of date and what's exposed, then helps you fix it — with a preview before anything changes.</p>
+        <!-- /download is counted by the site Worker and redirects to the DMG (DOWNLOAD_URL in telemetry/wrangler.site.jsonc). -->
         <div class="actions">
-          <a class="button" href="#download">Download for free</a>
+          <a class="button" href="/download">Download for free</a>
           <a class="button button--ghost" href="#pillars">See what it checks</a>
         </div>
+        <!-- Release line: update together with each DMG. -->
+        <p class="fine release">Version 1.0 · 6.4 MB · macOS 26 or later · Apple silicon and Intel</p>
+        <p class="fine consent">By downloading, you agree to the <a href="/terms">Terms of Use</a> and <a href="/privacy">Privacy Policy</a>.</p>
         <ul class="trust" aria-label="At a glance">
           <li>Native SwiftUI app</li>
           <li>Notarized by Apple</li>
@@ -49,41 +60,61 @@
         </ul>
       </div>
 
-      <!-- Sample scan summary. Static, generic data — no real machine. -->
-      <figure class="report" aria-label="Example scan summary">
-        <div class="report__bar" aria-hidden="true"><span></span><span></span><span></span></div>
-        <figcaption class="report__title">
-          <span>Mac health</span>
-          <span class="report__time">scan finished in 38 s</span>
-        </figcaption>
-        <ol class="report__rows">
-          <li class="row row--disk">
-            <span class="row__area">Disk</span>
-            <span class="row__value"><strong>62.4 GB</strong> rebuilds itself</span>
-            <span class="row__note">DerivedData · node_modules · Gradle</span>
+      <!-- Examples (examples.js): cleanups and end-of-life toolchains, one at a time, a crossfade every 3.5 s. Example numbers.
+           Logos: Simple Icons (CC0); trademarks of their owners. -->
+      <div class="examples" role="region" aria-roledescription="carousel" aria-label="Examples of what Disk Cleaner finds">
+        <ol class="examples__items" aria-live="off">
+          <li class="example example--xcode" aria-label="Xcode: 27.9 GB can be cleaned">
+            <span class="example__logo"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.06 5.3327c.4517-.1936.7744-.2581 1.097-.1936.5163.1291.7744.5163.968.7098.1936.3872.9034.7744 1.2261.8389.2581.0645.7098-.6453 1.0325-1.2906.3227-.5808.5163-1.3552.4517-1.5488-.0645-.1936-.968-.5808-1.1616-.5808-.1291 0-.3872.1291-.8389.0645-.4517-.0645-.9034-.5808-1.1616-.968-.4517-.6453-1.097-1.0325-1.6778-1.3552-.6453-.3227-1.3552-.5163-2.065-.6453-1.0325-.2581-2.065-.4517-3.0975-.3227-.5808.0645-1.2906.1291-1.8069.3227-.0645 0-.1936.1936-.0645.1936s.5808.0645.5808.0645-.5807.1292-.5807.2583c0 .1291.0645.1291.1291.1291.0645 0 1.4842-.0645 2.065 0 .6453.1291 1.3552.4517 1.8069 1.2261.7744 1.4197.4517 2.7749.2581 3.2266-.968 2.1295-8.6472 15.2294-9.0344 16.1328-.3873.9034-.5163 1.4842.5807 2.065s1.6778.3227 2.0005-.0645c.3872-.5163 7.0339-17.1654 9.2925-18.2624zm-3.6138 8.7117h1.5488c1.0325 0 1.2261.5163 1.2261.7098.0645.5163-.1936 1.1616-1.2261 1.1616h-.968l.7744 1.2906c.4517.7744.2581 1.1616 0 1.4197-.3872.3872-1.2261.3872-1.6778-.4517l-.9034-1.5488c-.6453 1.4197-1.2906 2.9684-2.065 4.7753h4.0009c1.9359 0 3.5492-1.6133 3.5492-3.5492V6.5588c-.0645-.1291-.1936-.0645-.2581 0-.3872.4517-1.4842 2.0004-4.001 7.4856zm-9.8087 8.0019h-.3227c-2.3231 0-4.1945-1.8714-4.1945-4.1945V7.0105c0-2.3231 1.8714-4.1945 4.1945-4.1945h9.3571c-.1936-.1936-.968-.5163-1.7423-.4517-.3227 0-.968.1291-1.3552-.1291-.3872-.3227-.3227-.5163-.9034-.5163H4.9277c-2.6458 0-4.7753 2.1295-4.7753 4.7753v11.7447c0 2.6458 2.1295 4.7753 4.4527 4.7108.6452 0 .8388-.5162 1.0324-.9034zM20.4152 6.9459v10.9058c0 2.3231-1.8714 4.1945-4.1945 4.1945H11.897s-.3872 1.0325.8389 1.0325h3.8719c2.6458 0 4.7753-2.1295 4.7753-4.7753V8.8173c.0646-.9034-.7098-1.4842-.9679-1.8714zm-18.5851.0646v10.8413c0 1.9359 1.6133 3.5492 3.5492 3.5492h.5808c0-.0645.7744-1.4197 2.4522-4.2591.1936-.3872.4517-.7744.7098-1.2261H4.4114c-.5808 0-.9034-.3872-.968-.7098-.1291-.5163.1936-1.1616.9034-1.1616h2.3877l3.033-5.2916s-.7098-1.2906-.9034-1.6133c-.2582-.4517-.1291-.9034.129-1.1615.3872-.3872 1.0325-.5808 1.6778.4517l.2581.3872.2581-.3872c.5808-.8389.968-.7744 1.2906-.7098.5163.1291.8389.7098.3872 1.6133L8.864 14.0444h1.3552c.4517-.7744.9034-1.5488 1.3552-2.3877-.0645-.3227-.1291-.7098-.0645-1.0325.0645-.5163.3227-.968.6453-1.3552l.3872.6453c1.2261-2.1295 2.1295-3.9364 2.3877-4.6463.1291-.3872.3227-1.1616.1291-1.8069H5.3794c-2.0005.0001-3.5493 1.6134-3.5493 3.5494zM4.605 17.7872c0-.0645.7744-1.4197.7744-1.4197 1.2261-.3227 1.8069.4517 1.8714.5163 0 0-.8389 1.4842-1.097 1.7423s-.5808.3227-.9034.2581c-.5164-.129-.839-.6453-.6454-1.097z"/></svg></span>
+            <span class="example__name" aria-hidden="true">Xcode</span>
+            <strong class="example__size" aria-hidden="true">27.9 GB</strong>
+            <span class="example__label" aria-hidden="true">can be cleaned</span>
           </li>
-          <li class="row row--warn">
-            <span class="row__area">Toolchains</span>
-            <span class="row__value"><strong>3</strong> need an update</span>
-            <span class="row__note">Node.js 18 has reached end of life</span>
+          <li class="example example--nodedotjs example--risk" aria-label="Node.js 18: End of life, High risk · update to Node.js 24 LTS">
+            <span class="example__logo"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M11.998,24c-0.321,0-0.641-0.084-0.922-0.247l-2.936-1.737c-0.438-0.245-0.224-0.332-0.08-0.383 c0.585-0.203,0.703-0.25,1.328-0.604c0.065-0.037,0.151-0.023,0.218,0.017l2.256,1.339c0.082,0.045,0.197,0.045,0.272,0l8.795-5.076 c0.082-0.047,0.134-0.141,0.134-0.238V6.921c0-0.099-0.053-0.192-0.137-0.242l-8.791-5.072c-0.081-0.047-0.189-0.047-0.271,0 L3.075,6.68C2.99,6.729,2.936,6.825,2.936,6.921v10.15c0,0.097,0.054,0.189,0.139,0.235l2.409,1.392 c1.307,0.654,2.108-0.116,2.108-0.89V7.787c0-0.142,0.114-0.253,0.256-0.253h1.115c0.139,0,0.255,0.112,0.255,0.253v10.021 c0,1.745-0.95,2.745-2.604,2.745c-0.508,0-0.909,0-2.026-0.551L2.28,18.675c-0.57-0.329-0.922-0.945-0.922-1.604V6.921 c0-0.659,0.353-1.275,0.922-1.603l8.795-5.082c0.557-0.315,1.296-0.315,1.848,0l8.794,5.082c0.57,0.329,0.924,0.944,0.924,1.603 v10.15c0,0.659-0.354,1.273-0.924,1.604l-8.794,5.078C12.643,23.916,12.324,24,11.998,24z M19.099,13.993 c0-1.9-1.284-2.406-3.987-2.763c-2.731-0.361-3.009-0.548-3.009-1.187c0-0.528,0.235-1.233,2.258-1.233 c1.807,0,2.473,0.389,2.747,1.607c0.024,0.115,0.129,0.199,0.247,0.199h1.141c0.071,0,0.138-0.031,0.186-0.081 c0.048-0.054,0.074-0.123,0.067-0.196c-0.177-2.098-1.571-3.076-4.388-3.076c-2.508,0-4.004,1.058-4.004,2.833 c0,1.925,1.488,2.457,3.895,2.695c2.88,0.282,3.103,0.703,3.103,1.269c0,0.983-0.789,1.402-2.642,1.402 c-2.327,0-2.839-0.584-3.011-1.742c-0.02-0.124-0.126-0.215-0.253-0.215h-1.137c-0.141,0-0.254,0.112-0.254,0.253 c0,1.482,0.806,3.248,4.655,3.248C17.501,17.007,19.099,15.91,19.099,13.993z"/></svg></span>
+            <span class="example__name" aria-hidden="true">Node.js 18</span>
+            <strong class="example__size" aria-hidden="true">End of life</strong>
+            <span class="example__label" aria-hidden="true">High risk · update to Node.js 24 LTS</span>
           </li>
-          <li class="row row--critical">
-            <span class="row__area">Security</span>
-            <span class="row__value"><strong>1</strong> critical</span>
-            <span class="row__note">A launch daemon runs from a folder anyone can write to</span>
+          <li class="example example--androidstudio" aria-label="Android Studio: 9.9 GB can be cleaned">
+            <span class="example__logo"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.2693 10.3368c-.3321 0-.6026.2705-.6026.6031v9.8324h-1.7379l-3.3355-6.9396c.476-.5387.6797-1.286.5243-2.0009a2.2862 2.2862 0 0 0-1.2893-1.6248v-.8124c.0121-.2871-.1426-.5787-.4043-.7407-.1391-.0825-.2884-.1234-.4402-.1234a.8478.8478 0 0 0-.4318.1182c-.2701.1671-.4248.4587-.4123.7662l-.0003.721c-1.0149.3668-1.6619 1.4153-1.4867 2.5197a2.282 2.282 0 0 0 .5916 1.2103l-3.2096 6.9064H4.0928c-1.0949-.007-1.9797-.8948-1.9832-1.9896V5.016c-.0055 1.1024.8836 2.0006 1.9859 2.0062a2.024 2.024 0 0 0 .1326-.0037h14.7453s2.5343-.2189 2.8619 1.5392c-.2491.0287-.4449.2321-.4449.4889 0 .7115-.5791 1.2901-1.3028 1.2901h-.8183zM17.222 22.5366c.2347.4837.0329 1.066-.4507 1.3007-.1296.0629-.2666.0895-.4018.0927a.9738.9738 0 0 1-.3194-.0455c-.024-.0078-.046-.0209-.0694-.0305a.9701.9701 0 0 1-.2277-.1321c-.0247-.0192-.0495-.038-.0724-.0598-.0825-.0783-.1574-.1672-.21-.2757l-1.2554-2.6143-1.5585-3.2452a.7725.7725 0 0 0-.6995-.4443h-.0024a.792.792 0 0 0-.7083.4443l-1.5109 3.2452-1.2321 2.6464a.9722.9722 0 0 1-.7985.5795c-.0626.0053-.1238-.0024-.185-.0087-.0344-.0036-.069-.0053-.1025-.0124-.0489-.0103-.0954-.0278-.142-.0452-.0301-.0113-.0613-.0197-.0901-.0339-.0496-.0244-.0948-.0565-.1397-.0889-.0217-.0156-.0457-.0275-.0662-.045a.9862.9862 0 0 1-.1695-.1844.9788.9788 0 0 1-.0708-.9852l.8469-1.8223 3.2676-7.0314a1.7964 1.7964 0 0 1-.7072-1.1637c-.1555-.9799.5129-1.9003 1.4928-2.0559V9.3946a.3542.3542 0 0 1 .1674-.3155.3468.3468 0 0 1 .3541 0 .354.354 0 0 1 .1674.3155v1.159l.0129.0064a1.8028 1.8028 0 0 1 1.2878 1.378 1.7835 1.7835 0 0 1-.6439 1.7836l3.3889 7.0507.8481 1.7643zM12.9841 12.306c.0042-.6081-.4854-1.1044-1.0935-1.1085a1.1204 1.1204 0 0 0-.7856.3219 1.101 1.101 0 0 0-.323.7716c-.0042.6081.4854 1.1044 1.0935 1.1085h.0077c.6046 0 1.0967-.488 1.1009-1.0935zm-1.027 5.2768c-.1119.0005-.2121.0632-.2571.1553l-1.4127 3.0342h3.3733l-1.4564-3.0328a.274.274 0 0 0-.2471-.1567zm8.1432-6.7459l-.0129-.0001h-.8177a.103.103 0 0 0-.103.103v12.9103a.103.103 0 0 0 .0966.103h.8435c.9861-.0035 1.7836-.804 1.7836-1.79V9.0468c0 .9887-.8014 1.7901-1.7901 1.7901zM2.6098 5.0161v.019c.0039.816.6719 1.483 1.4874 1.4869a12.061 12.061 0 0 1 .1309-.0034h1.1286c.1972-1.315.7607-2.525 1.638-3.4859H4.0993c-.9266.0031-1.6971.6401-1.9191 1.4975.2417.0355.4296.235.4296.4859zm6.3381-2.8977L7.9112.3284a.219.219 0 0 1 0-.2189A.2384.2384 0 0 1 8.098 0a.219.219 0 0 1 .1867.1094l1.0496 1.8158a6.4907 6.4907 0 0 1 5.3186 0L15.696.1094a.2189.2189 0 0 1 .3734.2189l-1.0302 1.79c1.6671.9125 2.7974 2.5439 3.0975 4.4018l-12.286-.0014c.3004-1.8572 1.4305-3.488 3.0972-4.4003zm5.3774 2.6202a.515.515 0 0 0 .5271.5028.515.515 0 0 0 .5151-.5151.5213.5213 0 0 0-.8885-.367.5151.5151 0 0 0-.1537.3793zm-5.7178-.0067a.5151.5151 0 0 0 .5207.5095.5086.5086 0 0 0 .367-.1481.5215.5215 0 1 0-.734-.7341.515.515 0 0 0-.1537.3727z"/></svg></span>
+            <span class="example__name" aria-hidden="true">Android Studio</span>
+            <strong class="example__size" aria-hidden="true">9.9 GB</strong>
+            <span class="example__label" aria-hidden="true">can be cleaned</span>
           </li>
-          <li class="row row--warn">
-            <span class="row__area">Network</span>
-            <span class="row__value"><strong>2</strong> services open</span>
-            <span class="row__note">PostgreSQL on port 5432 is open to your network</span>
+          <li class="example example--openjdk example--risk" aria-label="OpenJDK 20: End of life, High risk · update to JDK 25 LTS">
+            <span class="example__logo"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M11.915 0 11.7.215C9.515 2.4 7.47 6.39 6.046 10.483c-1.064 1.024-3.633 2.81-3.711 3.551-.093.87 1.746 2.611 1.55 3.235-.198.625-1.304 1.408-1.014 1.939.1.188.823.011 1.277-.491a13.389 13.389 0 0 0-.017 2.14c.076.906.27 1.668.643 2.232.372.563.956.911 1.667.911.397 0 .727-.114 1.024-.264.298-.149.571-.33.91-.5.68-.34 1.634-.666 3.53-.604 1.903.062 2.872.39 3.559.704.687.314 1.15.664 1.925.664.767 0 1.395-.336 1.807-.9.412-.563.631-1.33.72-2.24.06-.623.055-1.32 0-2.066.454.45 1.117.604 1.213.424.29-.53-.816-1.314-1.013-1.937-.198-.624 1.642-2.366 1.549-3.236-.08-.748-2.707-2.568-3.748-3.586C16.428 6.374 14.308 2.394 12.13.215zm.175 6.038a2.95 2.95 0 0 1 2.943 2.942 2.95 2.95 0 0 1-2.943 2.943A2.95 2.95 0 0 1 9.148 8.98a2.95 2.95 0 0 1 2.942-2.942zM8.685 7.983a3.515 3.515 0 0 0-.145.997c0 1.951 1.6 3.55 3.55 3.55 1.95 0 3.55-1.598 3.55-3.55 0-.329-.046-.648-.132-.951.334.095.64.208.915.336a42.699 42.699 0 0 1 2.042 5.829c.678 2.545 1.01 4.92.846 6.607-.082.844-.29 1.51-.606 1.94-.315.431-.713.651-1.315.651-.593 0-.932-.27-1.673-.61-.741-.338-1.825-.694-3.792-.758-1.974-.064-3.073.293-3.821.669-.375.188-.659.373-.911.5s-.466.2-.752.2c-.53 0-.876-.209-1.16-.64-.285-.43-.474-1.101-.545-1.948-.141-1.693.176-4.069.823-6.614a43.155 43.155 0 0 1 1.934-5.783c.348-.167.749-.31 1.192-.425zm-3.382 4.362a.216.216 0 0 1 .13.031c-.166.56-.323 1.116-.463 1.665a33.849 33.849 0 0 0-.547 2.555 3.9 3.9 0 0 0-.2-.39c-.58-1.012-.914-1.642-1.16-2.08.315-.24 1.679-1.755 2.24-1.781zm13.394.01c.562.027 1.926 1.543 2.24 1.783-.246.438-.58 1.068-1.16 2.08a4.428 4.428 0 0 0-.163.309 32.354 32.354 0 0 0-.562-2.49 40.579 40.579 0 0 0-.482-1.652.216.216 0 0 1 .127-.03z"/></svg></span>
+            <span class="example__name" aria-hidden="true">OpenJDK 20</span>
+            <strong class="example__size" aria-hidden="true">End of life</strong>
+            <span class="example__label" aria-hidden="true">High risk · update to JDK 25 LTS</span>
           </li>
-          <li class="row row--ok">
-            <span class="row__area">Thermal</span>
-            <span class="row__value"><strong>Nominal</strong></span>
-            <span class="row__note">Hottest core 54 °C</span>
+          <li class="example example--docker" aria-label="Docker: 6.8 GB can be cleaned">
+            <span class="example__logo"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.184-.186h-2.12a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 00-.75.748 11.376 11.376 0 00.692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 003.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288Z"/></svg></span>
+            <span class="example__name" aria-hidden="true">Docker</span>
+            <strong class="example__size" aria-hidden="true">6.8 GB</strong>
+            <span class="example__label" aria-hidden="true">can be cleaned</span>
+          </li>
+          <li class="example example--python example--risk" aria-label="Python 3.8: End of life, High risk · update to Python 3.14">
+            <span class="example__logo"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05-.05-1.23.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75-.02-.37.05-.34.11-.31.17-.28.25-.26.31-.23.38-.2.44-.18.51-.15.58-.12.64-.1.71-.06.77-.04.84-.02 1.27.05zm-6.3 1.98l-.23.33-.08.41.08.41.23.34.33.22.41.09.41-.09.33-.22.23-.34.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09zm13.09 3.95l.28.06.32.12.35.18.36.27.36.35.35.47.32.59.28.73.21.88.14 1.04.05 1.23-.06 1.23-.16 1.04-.24.86-.32.71-.36.57-.4.45-.42.33-.42.24-.4.16-.36.09-.32.05-.24.02-.16-.01h-8.22v.82h5.84l.01 2.76.02.36-.05.34-.11.31-.17.29-.25.25-.31.24-.38.2-.44.17-.51.15-.58.13-.64.09-.71.07-.77.04-.84.01-1.27-.04-1.07-.14-.9-.2-.73-.25-.59-.3-.45-.33-.34-.34-.25-.34-.16-.33-.1-.3-.04-.25-.02-.2.01-.13v-5.34l.05-.64.13-.54.21-.46.26-.38.3-.32.33-.24.35-.2.35-.14.33-.1.3-.06.26-.04.21-.02.13-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.36.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.01zm-6.47 14.25l-.23.33-.08.41.08.41.23.33.33.23.41.08.41-.08.33-.23.23-.33.08-.41-.08-.41-.23-.33-.33-.23-.41-.08-.41.08z"/></svg></span>
+            <span class="example__name" aria-hidden="true">Python 3.8</span>
+            <strong class="example__size" aria-hidden="true">End of life</strong>
+            <span class="example__label" aria-hidden="true">High risk · update to Python 3.14</span>
+          </li>
+          <li class="example example--cocoapods" aria-label="CocoaPods: 3.8 GB can be cleaned">
+            <span class="example__logo"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8.812 17.176c-2.968 0-4.956-2.308-4.956-5.176 0-2.705 1.776-5.176 4.91-5.176 2.407 0 3.856 1.445 4.207 3.357h3.95C16.479 6.427 13.51 3.42 8.718 3.42 3.131 3.42 0 7.523 0 12c0 4.57 3.295 8.58 8.766 8.58 4.58 0 7.549-2.822 8.18-6.272h-4.02c-.467 1.609-1.916 2.868-4.114 2.868zM24 12.068l-3.466 8.055-2.38-1.022 2.992-7.055-3.01-7.096 2.433-1.042Z"/></svg></span>
+            <span class="example__name" aria-hidden="true">CocoaPods</span>
+            <strong class="example__size" aria-hidden="true">3.8 GB</strong>
+            <span class="example__label" aria-hidden="true">can be cleaned</span>
+          </li>
+          <li class="example example--googlechrome" aria-label="Google Chrome: 2.3 GB can be cleaned">
+            <span class="example__logo"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-5.344 9.257c.206.01.413.016.621.016 6.627 0 12-5.373 12-12 0-1.54-.29-3.011-.818-4.364zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728Z"/></svg></span>
+            <span class="example__name" aria-hidden="true">Google Chrome</span>
+            <strong class="example__size" aria-hidden="true">2.3 GB</strong>
+            <span class="example__label" aria-hidden="true">can be cleaned</span>
           </li>
         </ol>
-      </figure>
+        <button class="examples__pause" type="button" hidden>Pause</button>
+      </div>
     </section>
 
     <section class="numbers" aria-label="Coverage">
@@ -124,60 +155,53 @@
       <div class="feature__head">
         <p class="eyebrow eyebrow--clean">Clean</p>
         <h2 id="clean-title">Tens of gigabytes that rebuild themselves.</h2>
-        <p class="section-lede">Every item says what it is, how big it is and what happens after it's gone. Try it on a typical iOS and React Native disk.</p>
+        <p class="section-lede">Every item says what it is, how big it is and what happens after it's gone — so you know what's safe before anything moves.</p>
       </div>
 
-      <!-- The one moving thing on the page: a sample developer disk you can clean. -->
-      <div class="demo" aria-labelledby="demo-title">
-        <div class="demo__head">
-          <h3 id="demo-title" class="demo__title">A typical developer disk</h3>
-          <div class="disk" aria-live="polite">
-            <div class="disk__bar"><span class="disk__used" id="disk-used"></span></div>
-            <span class="disk__text"><strong id="disk-free">—</strong> free of 494 GB</span>
-          </div>
-        </div>
-
-        <div class="map" id="map" role="group" aria-label="Disk map. Each tile is a folder; its size is proportional to the space it takes."></div>
-
-        <div class="demo__foot">
-          <p class="detail" id="detail" aria-live="polite">Point at a tile to see what it is and whether it comes back on its own.</p>
-          <button class="button button--clean" id="clean-button" type="button">Clean</button>
-        </div>
-
-        <ul class="legend" aria-label="Tile colors">
-          <li><span class="swatch swatch--rebuildable"></span>Rebuilds itself</li>
-          <li><span class="swatch swatch--likely"></span>Probably safe</li>
-          <li><span class="swatch swatch--review"></span>Your call</li>
-          <li><span class="swatch swatch--yours"></span>Your files — never selected for you</li>
-        </ul>
-      </div>
-
-      <dl class="finds__list">
-        <div>
-          <dt>Xcode &amp; simulators</dt>
-          <dd>DerivedData, previews, device symbols, archives, runtimes you no longer target and devices whose runtime is gone.<span class="paths">~/Library/Developer/Xcode/DerivedData</span></dd>
-        </div>
-        <div>
-          <dt>Packages &amp; toolchains</dt>
-          <dd>npm, Yarn, Bun, pnpm, CocoaPods, Gradle, SwiftPM, Cargo, Maven, Go, pip, uv, Homebrew, Metro and Expo.<span class="paths">~/.npm, ~/.gradle/caches, ~/.cargo/registry</span></dd>
-        </div>
-        <div>
-          <dt>IDEs &amp; SDKs</dt>
-          <dd>Android Studio and the Android SDK — NDK versions, system images, build tools — plus JetBrains, VS Code, Cursor and Zed.</dd>
-        </div>
-        <div>
-          <dt>Docker</dt>
-          <dd>Build cache, stopped containers and unused images through the Docker CLI. Volumes are never touched.</dd>
-        </div>
-        <div>
-          <dt>Your files</dt>
-          <dd>Large files, byte-identical duplicates and a map of any folder — never preselected.</dd>
-        </div>
-        <div>
-          <dt>Applications</dt>
-          <dd>Every app with its size and when you last opened it, plus app caches, logs and updater leftovers.</dd>
-        </div>
-      </dl>
+      <ul class="finds">
+        <li class="find">
+          <svg class="find__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 4.5l4.5 4.5-2.5 2.5L12.5 7z"/><path d="M13.5 8.5l-8.9 8.9a1.8 1.8 0 0 0 2.5 2.5l8.9-8.9"/></svg>
+          <h3>Xcode &amp; simulators</h3>
+          <p>DerivedData, previews, device symbols, archives, runtimes you no longer target and devices whose runtime is gone.</p>
+          <code class="find__path">~/Library/Developer/Xcode</code>
+          <p class="find__meta"><span class="badge badge--rebuildable">Rebuilds itself</span><span>Often 10–40 GB</span></p>
+        </li>
+        <li class="find">
+          <svg class="find__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5"/><path d="M12 12v9"/></svg>
+          <h3>Packages &amp; toolchains</h3>
+          <p>npm, Yarn, Bun, pnpm, CocoaPods, Gradle, SwiftPM, Cargo, Maven, Go, pip, uv, Homebrew, Metro and Expo.</p>
+          <code class="find__path">~/.npm · ~/.gradle/caches · ~/.cargo/registry</code>
+          <p class="find__meta"><span class="badge badge--rebuildable">Rebuilds itself</span><span>Downloaded again when needed</span></p>
+        </li>
+        <li class="find">
+          <svg class="find__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M3 9h18"/><path d="M10 12.5l-2.5 2.25L10 17M14 12.5l2.5 2.25L14 17"/></svg>
+          <h3>IDEs &amp; SDKs</h3>
+          <p>Android Studio and the Android SDK — NDK versions, system images, build tools — plus JetBrains, VS Code, Cursor and Zed.</p>
+          <code class="find__path">~/Library/Android/sdk</code>
+          <p class="find__meta"><span class="badge badge--review">Your call</span><span>Keep what your projects pin</span></p>
+        </li>
+        <li class="find">
+          <svg class="find__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l9 4.5-9 4.5-9-4.5z"/><path d="M3 12l9 4.5 9-4.5"/><path d="M3 16.5L12 21l9-4.5"/></svg>
+          <h3>Docker</h3>
+          <p>Build cache, stopped containers and unused images, through the Docker CLI.</p>
+          <code class="find__path">docker system df</code>
+          <p class="find__meta"><span class="badge badge--rebuildable">Rebuilds itself</span><span>Volumes are never touched</span></p>
+        </li>
+        <li class="find">
+          <svg class="find__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>
+          <h3>Your files</h3>
+          <p>Large files, byte-identical duplicates and a map of any folder you want to understand.</p>
+          <code class="find__path">~/Downloads · ~/Movies · any folder</code>
+          <p class="find__meta"><span class="badge badge--yours">Never preselected</span><span>You pick every file</span></p>
+        </li>
+        <li class="find">
+          <svg class="find__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg>
+          <h3>Applications</h3>
+          <p>Every app with its size and when you last opened it, plus app caches, logs and updater leftovers.</p>
+          <code class="find__path">/Applications · ~/Library/Caches</code>
+          <p class="find__meta"><span class="badge badge--review">Your call</span><span>Caches refill as you work</span></p>
+        </li>
+      </ul>
     </section>
 
     <section class="feature feature--split" id="toolchains" aria-labelledby="tools-title">
@@ -202,7 +226,7 @@
               <td>Node.js <span class="via">nvm</span></td><td><code>18.20.4</code></td>
               <td><span class="badge badge--now">Update now</span></td>
             </tr>
-            <tr class="tools__cmd"><td colspan="3"><code>nvm install 22 &amp;&amp; nvm alias default 22</code></td></tr>
+            <tr class="tools__cmd"><td colspan="3"><code>nvm install 24 &amp;&amp; nvm alias default 24</code></td></tr>
             <tr>
               <td>Python <span class="via">pyenv</span></td><td><code>3.9.19</code></td>
               <td><span class="badge badge--soon">Soon</span></td>
@@ -288,45 +312,71 @@
     <section class="stack" aria-labelledby="stack-title">
       <h2 id="stack-title">Knows your stack.</h2>
       <p class="section-lede">Sections appear only for tools you actually have. No Docker, no Docker page.</p>
-      <ul class="chips">
-        <li>Xcode</li><li>Simulators</li><li>SwiftPM</li><li>CocoaPods</li><li>Android Studio</li><li>Android SDK</li>
-        <li>Gradle</li><li>React Native</li><li>Expo</li><li>Metro</li><li>Flutter</li><li>Node.js</li><li>npm</li>
-        <li>Yarn</li><li>pnpm</li><li>Bun</li><li>Deno</li><li>Python</li><li>uv</li><li>pip</li><li>Ruby</li>
-        <li>Java</li><li>Kotlin</li><li>Maven</li><li>Go</li><li>Rust</li><li>Cargo</li><li>Docker</li><li>Homebrew</li>
-        <li>JetBrains</li><li>VS Code</li><li>Cursor</li><li>Zed</li>
-      </ul>
+      <!-- Endless one-line marquee: the list is repeated once (hidden from screen readers) so the loop is seamless. -->
+      <div class="marquee">
+        <div class="marquee__track">
+          <ul class="chips">
+            <li>Xcode</li><li>Simulators</li><li>SwiftPM</li><li>CocoaPods</li><li>Android Studio</li><li>Android SDK</li>
+            <li>Gradle</li><li>React Native</li><li>Expo</li><li>Metro</li><li>Flutter</li><li>Node.js</li><li>npm</li>
+            <li>Yarn</li><li>pnpm</li><li>Bun</li><li>Deno</li><li>Python</li><li>uv</li><li>pip</li><li>Ruby</li>
+            <li>Java</li><li>Kotlin</li><li>Maven</li><li>Go</li><li>Rust</li><li>Cargo</li><li>Docker</li><li>Homebrew</li>
+            <li>JetBrains</li><li>VS Code</li><li>Cursor</li><li>Zed</li>
+          </ul>
+          <ul class="chips" aria-hidden="true">
+            <li>Xcode</li><li>Simulators</li><li>SwiftPM</li><li>CocoaPods</li><li>Android Studio</li><li>Android SDK</li>
+            <li>Gradle</li><li>React Native</li><li>Expo</li><li>Metro</li><li>Flutter</li><li>Node.js</li><li>npm</li>
+            <li>Yarn</li><li>pnpm</li><li>Bun</li><li>Deno</li><li>Python</li><li>uv</li><li>pip</li><li>Ruby</li>
+            <li>Java</li><li>Kotlin</li><li>Maven</li><li>Go</li><li>Rust</li><li>Cargo</li><li>Docker</li><li>Homebrew</li>
+            <li>JetBrains</li><li>VS Code</li><li>Cursor</li><li>Zed</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section class="safety" id="safety" aria-labelledby="safety-title">
       <p class="eyebrow">Built not to break things</p>
       <h2 id="safety-title">Confident, because it's careful.</h2>
       <ul class="safety__grid">
-        <li><strong>Trash, never <code>rm</code>.</strong> Everything you clean goes to the Trash, so you can put it back.</li>
-        <li><strong>Preview first.</strong> Every item and its size, before anything moves. Only items that rebuild themselves are preselected.</li>
-        <li><strong>Personal folders stay out of reach.</strong> Documents, Desktop, iCloud, Mail, Messages and Keychains are never cleaned automatically; cloud folders are never even read.</li>
-        <li><strong>No shell, no surprises.</strong> <code>simctl</code> and <code>docker</code> run from a fixed allowlist with validated arguments. Fixes that need admin rights are shown as a command you run yourself.</li>
-        <li><strong>Local by default.</strong> No account. No network access unless you press Check Online or opt in to anonymous statistics. <a href="/privacy">See exactly what's sent</a></li>
-        <li><strong>Native and light.</strong> A 4&nbsp;MB SwiftUI app for Apple silicon and Intel. Signed with a Developer ID and notarized by Apple.</li>
+        <li class="safe" data-reveal>
+          <svg class="safe__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16" pathLength="1"/><path d="M9.5 7V4.5h5V7" pathLength="1"/><path d="M6.5 7l.8 12.1a1.5 1.5 0 0 0 1.5 1.4h6.4a1.5 1.5 0 0 0 1.5-1.4L17.5 7" pathLength="1"/><path d="M10 11v5.5M14 11v5.5" pathLength="1"/></svg>
+          <h3>Trash, never <code>rm</code>.</h3>
+          <p>Everything you clean goes to the Trash, so you can put it back.</p>
+        </li>
+        <li class="safe" data-reveal>
+          <svg class="safe__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" pathLength="1"/><circle cx="12" cy="12" r="3" pathLength="1"/></svg>
+          <h3>Preview first.</h3>
+          <p>Every item and its size, before anything moves. Only items that rebuild themselves are preselected.</p>
+        </li>
+        <li class="safe" data-reveal>
+          <svg class="safe__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3l7.5 3v5.5c0 4.5-3.2 8.2-7.5 9.5-4.3-1.3-7.5-5-7.5-9.5V6z" pathLength="1"/><rect x="9" y="11" width="6" height="5" rx="1" pathLength="1"/><path d="M10.5 11V9.5a1.5 1.5 0 0 1 3 0V11" pathLength="1"/></svg>
+          <h3>Personal folders stay out of reach.</h3>
+          <p>Documents, Desktop, iCloud, Mail, Messages and Keychains are never cleaned automatically; cloud folders are never even read.</p>
+        </li>
+        <li class="safe" data-reveal>
+          <svg class="safe__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4.5" width="18" height="15" rx="2.5" pathLength="1"/><path d="M7 10l3 2.5L7 15" pathLength="1"/><path d="M12.5 15h4.5" pathLength="1"/></svg>
+          <h3>No shell, no surprises.</h3>
+          <p><code>simctl</code> and <code>docker</code> run from a fixed allowlist with validated arguments. Fixes that need admin rights are shown as a command you run yourself.</p>
+        </li>
+        <li class="safe" data-reveal>
+          <svg class="safe__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8.6 6.5A6 6 0 0 1 17.6 10a4 4 0 0 1 2.6 6.8" pathLength="1"/><path d="M16.5 19H7a4.5 4.5 0 0 1-1.9-8.6" pathLength="1"/><path d="M3.5 3.5l17 17" pathLength="1"/></svg>
+          <h3>Local by default.</h3>
+          <p>No account. No network access unless you press Check Online or opt in to anonymous statistics. <a href="/privacy">See exactly what's sent</a></p>
+        </li>
+        <li class="safe" data-reveal>
+          <svg class="safe__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13 3L5 13.5h6L10 21l8-10.5h-6z" pathLength="1"/></svg>
+          <h3>Native and light.</h3>
+          <p>A 6&nbsp;MB SwiftUI app for Apple silicon and Intel. Signed with a Developer ID and notarized by Apple.</p>
+        </li>
       </ul>
-    </section>
-
-    <section class="download" id="download" aria-labelledby="download-title">
-      <img src="/assets/app-icon.png" alt="Disk Cleaner app icon" width="112" height="112">
-      <div>
-        <h2 id="download-title">Give your Mac a health check today.</h2>
-        <!-- Release block: update together with each DMG (scripts/make_dmg.sh prints size and SHA-256). -->
-        <p class="release">Free. Version 1.0 for macOS 26 or later, on Apple silicon and Intel Macs.</p>
-        <a class="button button--large" href="https://downloads.machealthapps.com/DiskCleaner-1.0.dmg">Download DiskCleaner-1.0.dmg (4.4 MB)</a>
-        <p class="fine">Open the disk image and drag Disk Cleaner to Applications. For complete results, allow Full Disk Access in System Settings → Privacy &amp; Security.</p>
-        <p class="checksum">SHA-256 <code>3eab67225c2fb5c9fe92998717b8fbb12033f4e7e9aba5e4a86557f29c1a9229</code></p>
-      </div>
     </section>
   </main>
 
   <footer class="foot">
     <span>© 2026 Mac Health Apps</span>
     <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
     <a href="mailto:support@machealthapps.com">support@machealthapps.com</a>
+    <button class="foot__link" type="button" data-cookie-settings hidden>Cookie settings</button>
   </footer>
 </body>
 </html>

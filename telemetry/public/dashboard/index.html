@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Statistics — Mac Cleaner</title>
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="/dashboard/dashboard.css">
+  <script src="/dashboard/dashboard.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <h1>Mac Cleaner statistics</h1>
+    <div class="top__actions">
+      <span class="updated" id="updated"></span>
+      <button class="link" id="refresh" type="button" hidden>Refresh</button>
+      <button class="link" id="sign-out" type="button" hidden>Sign out</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- The token is kept for this tab only (sessionStorage) and sent as a Bearer header, never in the URL. -->
+    <form class="signin" id="signin" autocomplete="off">
+      <label for="token">Stats token</label>
+      <p class="hint">The <code>STATS_TOKEN</code> secret of the Worker. It stays in this browser tab.</p>
+      <div class="signin__row">
+        <input id="token" name="token" type="password" required spellcheck="false" autocomplete="off">
+        <button type="submit">Show statistics</button>
+      </div>
+      <p class="error" id="error" role="alert"></p>
+    </form>
+
+    <div id="stats" hidden>
+      <section class="tiles" aria-label="Totals">
+        <div class="tile"><span>Downloads, 30 days</span><strong id="t-downloads30">—</strong><small id="t-downloads">—</small></div>
+        <div class="tile"><span>Installs</span><strong id="t-installs">—</strong><small>opted in to statistics</small></div>
+        <div class="tile"><span>Weekly active</span><strong id="t-weekly">—</strong><small>opened in the last 7 days</small></div>
+        <div class="tile"><span>Monthly active</span><strong id="t-monthly">—</strong><small>opened in the last 30 days</small></div>
+        <div class="tile"><span>Likely uninstalled</span><strong id="t-churned">—</strong><small>not seen for 30+ days</small></div>
+        <div class="tile"><span>Space freed</span><strong id="t-bytes">—</strong><small id="t-cleanups">—</small></div>
+      </section>
+
+      <section class="card">
+        <h2>Last 30 days</h2>
+        <div class="charts">
+          <figure><figcaption>Downloads</figcaption><div class="bars bars--downloads" id="c-downloads"></div></figure>
+          <figure><figcaption>New installs</figcaption><div class="bars bars--installs" id="c-installs"></div></figure>
+          <figure><figcaption>Active installs</figcaption><div class="bars bars--active" id="c-active"></div></figure>
+        </div>
+      </section>
+
+      <div class="grid">
+        <section class="card"><h2>Space freed by section</h2><table id="l-cleaned"></table></section>
+        <section class="card"><h2>App versions <small>active installs</small></h2><table id="l-versions"></table></section>
+        <section class="card"><h2>macOS <small>active installs</small></h2><table id="l-os"></table></section>
+        <section class="card"><h2>Architecture <small>active installs</small></h2><table id="l-arch"></table></section>
+        <section class="card"><h2>Downloads by version</h2><table id="l-downloads"></table></section>
+      </div>
+
+      <p class="note">Installs and activity come only from people who opted in to anonymous statistics, so they are lower than
+        real numbers. An app can't report its own removal: “likely uninstalled” means the install hasn't opened the app for 30 days.</p>
+    </div>
+  </main>
+</body>
+</html>

@@ -3,22 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Privacy — Disk Cleaner</title>
+  <title>Privacy Policy — Disk Cleaner</title>
   <meta name="description" content="What Disk Cleaner sends, and what it never sends.">
   <meta name="color-scheme" content="light dark">
   <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="preload" href="/assets/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/styles.css">
+  <script src="/analytics.js" defer></script>
 </head>
 <body>
   <header class="bar">
     <a class="brand" href="/">
       <img src="/assets/app-icon.png" alt="" width="28" height="28">
-      Disk Cleaner
+      Mac Cleaner
     </a>
   </header>
 
   <main class="prose">
-    <h1>Privacy</h1>
+    <h1>Privacy Policy</h1>
     <p>Disk Cleaner works on your Mac. It reads folder sizes to show you what takes space, and it moves what you choose to the Trash. None of that leaves your computer.</p>
 
     <h2>Anonymous statistics, only if you agree</h2>
@@ -34,6 +36,10 @@
     <h2>Checking for updates to your developer tools</h2>
     <p>The Environments page works on your Mac until you press Check Online. Then it downloads public release schedules from endoflife.date and nodejs.org and compares them with your installed versions on your Mac. Your versions are not sent; those sites only see an ordinary download request.</p>
 
+    <h2>Downloads</h2>
+    <p>When you download Disk Cleaner from this site, we add one to a counter for that day and app version. Nothing else about the download is kept: no IP address, browser details, referrer or cookie.</p>
+    <h2 id="analytics">Website analytics</h2>
+    <p>If you agree in the banner, this website uses Google Analytics 4 to see how visitors find and use it: pages viewed, clicks on the download button, rough location, device and browser type. Google sets cookies (<code>_ga</code>, <code>_ga_*</code>) for up to two years and processes the data on our behalf under <a href="https://policies.google.com/privacy">Google's privacy policy</a>; Google Analytics 4 does not store IP addresses. If you decline, no analytics script is loaded. You can change your choice with “Cookie settings” at the bottom of any page. The app itself never uses Google Analytics.</p>
     <h2>What is never sent</h2>
     <ul>
       <li>file or folder names, paths, or their contents;</li>
@@ -42,8 +48,16 @@
     </ul>
 
     <h2>Where it goes</h2>
-    <p>Statistics go to our own server on Cloudflare and are used only to count installs and see which features help. They are not sold or shared. Turning sharing off in Settings also deletes the random ID on your Mac, so a later opt-in starts as a new, unlinked install.</p>
+    <p>Mac Health Apps, based in the Netherlands, is responsible for this data. Statistics go to our own server on Cloudflare and are used only to count installs and see which features help. They are not sold or shared. Turning sharing off in Settings also deletes the random ID on your Mac, so a later opt-in starts as a new, unlinked install.</p>
 
+    <h2>Why we may process this</h2>
+    <p>Anonymous statistics in the app and Google Analytics on this website are used only with your consent, which you can withdraw at any time (in the app’s Settings, or with “Cookie settings” on this site). Download counts are kept because we have a legitimate interest in knowing how often the app is downloaded; they contain no personal data.</p>
+    <h2>Your rights</h2>
+    <p>Depending on where you live, you may have the right to access, correct or delete data about you, to object to processing, and to complain to a data protection authority — in the Netherlands, the Autoriteit Persoonsgegevens (autoriteitpersoonsgegevens.nl), or the authority where you live. Because statistics are tied only to a random ID on your Mac, we can't link them to you unless you send us that ID; turning sharing off deletes it from your Mac.</p>
+    <h2>Children</h2>
+    <p>Disk Cleaner is a tool for developers and isn't aimed at children. We don't knowingly collect data from anyone under 16.</p>
+    <h2>Changes</h2>
+    <p>If this policy changes, we'll update the date below and, for significant changes, say so on this site. See also the <a href="/terms">Terms of Use</a>.</p>
     <h2>Contact</h2>
     <p>Questions or a request to remove data: <a href="mailto:support@machealthapps.com">support@machealthapps.com</a>.</p>
     <p class="fine">Last updated 23 October 2026.</p>
@@ -52,6 +66,8 @@
   <footer class="foot">
     <span>© 2026 Mac Health Apps</span>
     <a href="/">Disk Cleaner</a>
+    <a href="/terms">Terms</a>
+    <button class="foot__link" type="button" data-cookie-settings hidden>Cookie settings</button>
   </footer>
 </body>
 </html>

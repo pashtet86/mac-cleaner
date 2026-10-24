@@ -1,0 +1,40 @@
+{
+	// The website (machealthapps.com): static files from ../website and a counted /download redirect.
+	// Deploy: npm run site:deploy. Statistics and the dashboard live in the other Worker (wrangler.jsonc).
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "machealthapps-site",
+	"main": "src/site.ts",
+	"compatibility_date": "2026-10-22",
+	"assets": {
+		"directory": "../website",
+		"binding": "ASSETS",
+		"html_handling": "auto-trailing-slash",
+		"not_found_handling": "404-page",
+		"run_worker_first": ["/download", "/download/", "/analytics.js"]
+	},
+	"vars": {
+		// Update with each release, together with the release block in website/index.html.
+		"DOWNLOAD_URL": "https://downloads.machealthapps.com/DiskCleaner-1.0.dmg",
+		// Google Analytics 4 Measurement ID, e.g. "G-ABC123XYZ9". Not a secret (it's public in every page that uses GA).
+		// Empty: no analytics script and no consent banner. Set it here, not in the dashboard: deploys overwrite dashboard vars.
+		"GA_MEASUREMENT_ID": ""
+	},
+	"d1_databases": [
+		{
+			// The same database as the stats Worker, so the dashboard can show downloads next to installs.
+			"binding": "DB",
+			"database_name": "devspace-telemetry",
+			"database_id": "91b4c507-78c2-48da-abdc-dcf9bba489f2",
+			"migrations_dir": "migrations"
+		}
+	],
+	// machealthapps.com is a zone on this account; custom domains create the DNS records and certificates.
+	"routes": [
+		{ "pattern": "machealthapps.com", "custom_domain": true },
+		{ "pattern": "www.machealthapps.com", "custom_domain": true }
+	],
+	"observability": {
+		"enabled": true,
+		"logs": { "enabled": true, "head_sampling_rate": 1 }
+	}
+}

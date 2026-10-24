@@ -114,7 +114,7 @@ One-time setup on the release Mac:
    (prints the public key; it is already in Info.plist). **Back up the private key** with
    `generate_keys --account com.machealthapps.diskcleaner -x <file>` and store it in a password manager — without it
    no installed copy will accept another update.
-3. `npx wrangler login` with access to the `downloads` R2 bucket.
+3. `npx wrangler login` with access to the `mac-health-app` R2 bucket.
 
 Each release:
 

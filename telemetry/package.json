@@ -9,7 +9,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "db:migrate:local": "wrangler d1 migrations apply devspace-telemetry --local",
-    "db:migrate:remote": "wrangler d1 migrations apply devspace-telemetry --remote"
+    "db:migrate:remote": "wrangler d1 migrations apply devspace-telemetry --remote",
+    "site:dev": "wrangler dev -c wrangler.site.jsonc --port 8788",
+    "site:deploy": "wrangler deploy -c wrangler.site.jsonc"
   },
   "dependencies": {
     "zod": "4.1.12"

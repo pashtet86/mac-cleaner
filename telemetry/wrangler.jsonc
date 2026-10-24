@@ -6,6 +6,12 @@
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
+	// The statistics dashboard at /dashboard/. API paths (/v1/*) aren't files, so they reach the Worker.
+	"assets": {
+		"directory": "./public",
+		"html_handling": "auto-trailing-slash",
+		"not_found_handling": "none"
+	},
 	"d1_databases": [
 		{
 			"binding": "DB",

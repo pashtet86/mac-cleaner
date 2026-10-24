@@ -20,7 +20,7 @@ VERSION="${1:-}"
 [[ "$VERSION" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]] || { echo "Usage: scripts/release.sh <version, e.g. 1.1>" >&2; exit 1; }
 
 FEED_HOST="https://downloads.machealthapps.com"
-BUCKET="downloads"
+BUCKET="mac-health-app"
 KEY_ACCOUNT="com.machealthapps.diskcleaner"
 PROJECT=MacDiskCleaner.xcodeproj/project.pbxproj
 UPDATES=build/updates

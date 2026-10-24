@@ -132,6 +132,17 @@ async function stats(env: Env) {
          SELECT install_id, MAX(day) AS last_seen FROM events GROUP BY install_id
        ) WHERE last_seen < date('now', '-30 days')`,
     ),
+    // Website downloads (site Worker, /download). Counts everyone, not only people who opt in to statistics.
+    db.prepare(
+      `SELECT COALESCE(SUM(count), 0) AS total,
+              COALESCE(SUM(CASE WHEN day >= date('now', '-29 days') THEN count END), 0) AS last30
+       FROM downloads`,
+    ),
+    db.prepare(
+      `SELECT day, SUM(count) AS downloads FROM downloads
+       WHERE day >= date('now', '-29 days') GROUP BY day ORDER BY day`,
+    ),
+    db.prepare(`SELECT version AS value, SUM(count) AS downloads FROM downloads GROUP BY version ORDER BY downloads DESC`),
   ]);
   const rows = (index: number) => results[index]?.results ?? [];
   return {
@@ -143,6 +154,9 @@ async function stats(env: Env) {
     architectures: rows(5),
     cleaned: rows(6),
     churned: rows(7)[0] ?? null,
+    downloads: rows(8)[0] ?? null,
+    downloadsByDay: rows(9),
+    downloadVersions: rows(10),
   };
 }
 
